@@ -1,7 +1,7 @@
 # Nudge-Post-install
 ## Jamf Pro Post-install script to configure Nudge
 
-On the off-chance this may help other Jamf Pro admins, we’re currently testing the following Nudge post-install script, which we’ve added to a Jamf Pro policy as a Script payload, specifying the following:
+On the off-chance this may help other Jamf Pro admins, we’re currently testing a [Nudge post-install script](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash), which we’ve added to a Jamf Pro policy as a Script payload, specifying the following:
 
 ### Jamf Pro Script Parameter Labels
 
@@ -9,6 +9,7 @@ On the off-chance this may help other Jamf Pro admins, we’re currently testing
 - Parameter 5: Required Minimum OS Version (i.e., 11.2.3)
 - Parameter 6: Required Installation Date (i.e., 2021-03-17)
 
+![Jamf Pro Script Parameter Labels](Screen%20Shot%202021-03-19%20at%207.08.04%20AM.png)
 
 
 ---
