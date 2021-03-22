@@ -6,10 +6,12 @@ On the off-chance this may help other Jamf Pro admins, we’re currently testing
 ### Jamf Pro Script Parameter Labels
 
 - Parameter 4: Authorization Key
-- Parameter 5: Required Minimum OS Version (i.e., 11.2.3)
-- Parameter 6: Required Installation Date (i.e., 2021-03-17)
+- Parameter 5: Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
+- Parameter 6: Required Minimum OS Version (i.e., 11.2.3)
+- Parameter 7: Required Installation Date & Time (i.e., 2021-03-26T10:00:00Z)
+- Parameter 8: Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
 
-![Jamf Pro Script Parameter Labels](Screen%20Shot%202021-03-19%20at%207.08.04%20AM.png)
+![Jamf Pro Script Parameter Labels](Screen%20Shot%202021-03-22%20at%2012.55.06%20PM.png)
 
 
 ---
