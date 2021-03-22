@@ -14,6 +14,10 @@
 # 	Version 0.0.1, 19-Mar-2021, Dan K. Snelson (@dan-snelson)
 #		Original version
 #
+#	Version 0.0.2, 20-Mar-2021, Dan K. Snelson (@dan-snelson)
+#		Leveraged additional Script Parameters
+#		Added "Reset" function
+#
 ####################################################################################################
 
 
@@ -24,16 +28,18 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.1"
+scriptVersion="0.0.2"
 scriptResult=""
-authorizationKey="${4}"				# Authorization Key to prevent unauthorized execution via Jamf Remote
-requiredMinimumOSVersion="${5}"		# 11.2.3
-requiredInstallationDate="${6}"		# 2021-03-17
-jsonPath="/usr/local/companyname/scripts/com.companyname.Nudge.json"
-launchAgentPath="/Library/LaunchAgents/com.companyname.Nudge.plist"
-launchDaemonPath="/Library/LaunchDaemons/com.companyname.Nudge.logger.plist"
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
+authorizationKey="${4}"				# Authorization Key to prevent unauthorized execution via Jamf Remote
+plistDomain="${5}"					# Reverse Domain Name Notation (i.e., "org.churchofjesuschrist.ics")
+requiredMinimumOSVersion="${6}"		# Required Minimum OS Version (i.e., 11.2.3)
+requiredInstallationDate="${7}"		# Required Installation Date & Time (i.e., 2021-03-17T10:00:00Z)
+resetConfiguration="${8}"			# Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
+jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
+launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
+launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
 
 
 
@@ -60,6 +66,80 @@ function authorizationCheck() {
 		scriptResult+="Correct Authorization Key, proceeding; "
 
 	fi
+
+}
+
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Reset Configuration
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+function resetConfiguration() {
+
+	ScriptLog "Reset Configuration: ${1}"
+	scriptResult+="Reset Configuration: ${1}; "
+
+	case ${1} in
+
+		"All" )
+			# Reset All Configuration Files JSON, LaunchAgent, LaunchDaemon
+			ScriptLog "Reset All Configuration Files"
+
+			# Reset JSON
+			ScriptLog "Remove ${jsonPath} …"
+			/bin/rm -fv ${jsonPath}
+			scriptResult+="Removed ${jsonPath}; "
+
+			# Reset LaunchAgent
+			ScriptLog "Unload ${launchAgentPath} …"
+			/bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
+			ScriptLog "Remove ${launchAgentPath} …"
+			/bin/rm -fv ${launchAgentPath}
+			scriptResult+="Removed ${launchAgentPath}; "
+
+			# Reset LaunchDaemon
+			ScriptLog "Unload ${launchDaemonPath} …"
+			/bin/launchctl unload -w "${launchDaemonPath}"
+			ScriptLog "Remove ${launchDaemonPath} …"
+			/bin/rm -fv ${launchDaemonPath}
+			scriptResult+="Removed ${launchDaemonPath}; "
+
+			scriptResult+="Reset All Configuration Files; "
+			;;
+
+		"JSON" )
+			# Reset JSON
+			ScriptLog "Remove ${jsonPath} …"
+			/bin/rm -fv ${jsonPath}
+			scriptResult+="Removed ${jsonPath}; "
+			;;
+
+		"LaunchAgent" )
+			# Reset LaunchAgent
+			ScriptLog "Unload ${launchAgentPath} …"
+			/bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
+			ScriptLog "Remove ${launchAgentPath} …"
+			/bin/rm -fv ${launchAgentPath}
+			scriptResult+="Removed ${launchAgentPath}; "
+			;;
+
+		"LaunchDaemon" )
+			# Reset LaunchDaemon
+			ScriptLog "Unload ${launchDaemonPath} …"
+			/bin/launchctl unload -w "${launchDaemonPath}"
+			ScriptLog "Remove ${launchDaemonPath} …"
+			/bin/rm -fv ${launchDaemonPath}
+			scriptResult+="Removed ${launchDaemonPath}; "
+			;;
+
+		* )
+			# None of the expected options was entered; don't reset anything
+			ScriptLog "None of the expected reset options was entered; don't reset anything"
+			scriptResult+="None of the expected reset options was entered; don't reset anything; "
+			;;
+
+	esac
 
 }
 
@@ -92,44 +172,29 @@ authorizationCheck
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Hide Nudge in Finder & Launchpad
+# Reset Configuration
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-echo "Hide Nudge in Finder …"
-/usr/bin/chflags hidden "/Applications/Utilities/Nudge.app" 
+resetConfiguration "${resetConfiguration}"
 
-echo "Hide Nudge in Launchpad …"
-/usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders -name com.apple.dock.launchpad)/db/db "DELETE FROM apps WHERE title='Nudge'"
-/usr/bin/killall Dock
-
-scriptResult+="Hid ${1} in Finder & Launchpad; "
 
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Create Nudge Logger LaunchDaemon
+# Nudge Logger LaunchDaemon
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-if [[ -f ${launchDaemonPath} ]]; then
+if [[ ! -f ${launchDaemonPath} ]]; then
 
-	echo "Unload ${launchDaemonPath} …"
-	/bin/launchctl unload -w "${launchDaemonPath}"
+	echo "Create ${launchDaemonPath} …"
 
-	echo "Remove ${launchDaemonPath} …"
-	/bin/rm -fv ${launchDaemonPath}
-	scriptResult+="Removed ${launchDaemonPath}; "
-
-fi
-
-echo "Create ${launchDaemonPath} …"
-
-cat <<EOF > ${launchDaemonPath}
+	cat <<EOF > ${launchDaemonPath}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>com.companyname.Nudge.Logger</string>
+	<string>${plistDomain}.Nudge.Logger</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/bin/log</string>
@@ -144,32 +209,35 @@ cat <<EOF > ${launchDaemonPath}
 	<key>RunAtLoad</key>
 	<true/>
 	<key>StandardOutPath</key>
-	<string>/var/log/com.companyname.log</string>
+	<string>/var/log/${plistDomain}.log</string>
 </dict>
 </plist>
 EOF
 
-/bin/launchctl load -w "${launchDaemonPath}"
+	/bin/launchctl load -w "${launchDaemonPath}"
 
+else
 
+	echo "${launchDaemonPath} exists"
+	scriptResult+="${launchDaemonPath} exists; "
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Write Nudge JSON client-side
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-if [[ -f ${jsonPath} ]]; then
-	echo "Remove ${jsonPath} …"
-	/bin/rm -fv ${jsonPath}
-	scriptResult+="Removed ${jsonPath}; "
 fi
 
-echo "Create ${jsonPath} …"
-/usr/bin/touch ${jsonPath}
-scriptResult+="Created ${jsonPath}; "
 
-echo "Write ${jsonPath} …"
 
-cat <<EOF > ${jsonPath}
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Nudge JSON client-side
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+if [[ ! -f ${jsonPath} ]]; then
+
+	echo "Create ${jsonPath} …"
+	/usr/bin/touch ${jsonPath}
+	scriptResult+="Created ${jsonPath}; "
+
+	echo "Write ${jsonPath} …"
+
+	cat <<EOF > ${jsonPath}
 {
 	"optionalFeatures": {
 	  "asyncronousSoftwareUpdate": true,
@@ -178,15 +246,15 @@ cat <<EOF > ${jsonPath}
 	},
 	"osVersionRequirements": [
 	  {
-		"aboutUpdateURL_disabled": "https://servicenow.companyname.com/support?id=kb_article_view&sysparm_article=KB86753099",
+		"aboutUpdateURL_disabled": "https://servicenow.churchofjesuschrist.org/support?id=kb_article_view&sysparm_article=KB0054571",
 		"aboutUpdateURLs": [
 		  {
 			"_language": "en",
-			"aboutUpdateURL": "https://servicenow.companyname.com/support?id=kb_article_view&sysparm_article=KB86753099"
+			"aboutUpdateURL": "https://servicenow.churchofjesuschrist.org/support?id=kb_article_view&sysparm_article=KB0054571"
 		  }
 		],
 		"majorUpgradeAppPath": "/Applications/Install macOS Big Sur.app",
-		"requiredInstallationDate": "${requiredInstallationDate}T10:00:00Z",
+		"requiredInstallationDate": "${requiredInstallationDate}",
 		"requiredMinimumOSVersion": "${requiredMinimumOSVersion}",
 		"targetedOSVersions": [
 		  "11.0",
@@ -216,10 +284,10 @@ cat <<EOF > ${jsonPath}
 	  "fallbackLanguage": "en",
 	  "forceFallbackLanguage": false,
 	  "forceScreenShotIcon": false,
-	  "iconDarkPath": "/usr/local/company/icons/WAS.icns",
-	  "iconLightPath": "/usr/local/company/icons/WAS.icns",
-	  "screenShotDarkPath": "/usr/local/company/icons/nudgeInstructionsDark.png",
-	  "screenShotLightPath": "/usr/local/company/icons/nudgeInstructions.png",
+	  "iconDarkPath": "/usr/local/ics/icons/WAS.icns",
+	  "iconLightPath": "/usr/local/ics/icons/WAS.icns",
+	  "screenShotDarkPath": "/usr/local/ics/icons/nudgeInstructionsDark.png",
+	  "screenShotLightPath": "/usr/local/ics/icons/nudgeInstructions.png",
 	  "simpleMode": false,
 	  "singleQuitButton": true,
 	  "updateElements": [
@@ -231,8 +299,8 @@ cat <<EOF > ${jsonPath}
 		  "mainContentSubHeader": "Updates may take 45 minutes or longer",
 		  "actionButtonText": "Open Software Update",
 		  "mainContentNote": "Instructions",
-		  "mainContentText": "To perform the update now, click \"Open Software Update,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"Later\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).\n\nPlease see KB0054571 or contact the Global Service Department with questions:\n+1 (801) 555-1212.",
-		  "informationButtonText": "View KB86753099 …",
+		  "mainContentText": "To perform the update now, click \"Open Software Update,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"Later\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).\n\nPlease see KB0054571 or contact the Global Service Department with questions:\n+1 (801) 240-4357.",
+		  "informationButtonText": "View KB0054571 …",
 		  "primaryQuitButtonText": "Later",
 		  "secondaryQuitButtonText": "secondaryQuitButtonText"
 		}
@@ -241,34 +309,32 @@ cat <<EOF > ${jsonPath}
 }
 EOF
 
-scriptResult+="Wrote Nudge JSON file to ${jsonPath}; "
+	scriptResult+="Wrote Nudge JSON file to ${jsonPath}; "
 
+else
 
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Create Nudge LaunchAgent
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-if [[ -f ${launchAgentPath} ]]; then
-
-	echo "Unload ${launchAgentPath} …"
-	/bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
-
-	echo "Remove ${launchAgentPath} …"
-	/bin/rm -fv ${launchAgentPath}
-	scriptResult+="Removed ${launchAgentPath}; "
+	echo "${jsonPath} exists"
+	scriptResult+="${jsonPath} exists; "
 
 fi
 
-echo "Create ${launchAgentPath} …"
 
-cat <<EOF > ${launchAgentPath}
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Nudge LaunchAgent
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+if [[ ! -f ${launchAgentPath} ]]; then
+
+	echo "Create ${launchAgentPath} …"
+
+	cat <<EOF > ${launchAgentPath}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>com.companyname.Nudge.plist</string>
+	<string>${plistDomain}.Nudge.plist</string>
 	<key>LimitLoadToSessionType</key>
 	<array>
 		<string>Aqua</string>
@@ -285,20 +351,27 @@ cat <<EOF > ${launchAgentPath}
 	<array>
 		<dict>
 			<key>Minute</key>
-			<integer>0</integer>
+			<integer>17</integer>
 		</dict>
 	</array>
 </dict>
 </plist>
 EOF
 
-scriptResult+="Created ${launchAgentPath}; "
+	scriptResult+="Created ${launchAgentPath}; "
 
-echo "Set ${launchAgentPath} file permissions ..."
-/usr/sbin/chown root:wheel ${launchAgentPath}
-/bin/chmod 644 ${launchAgentPath}
-/bin/chmod +x ${launchAgentPath}
-scriptResult+="Set ${launchAgentPath} file permissions; "
+	echo "Set ${launchAgentPath} file permissions ..."
+	/usr/sbin/chown root:wheel ${launchAgentPath}
+	/bin/chmod 644 ${launchAgentPath}
+	/bin/chmod +x ${launchAgentPath}
+	scriptResult+="Set ${launchAgentPath} file permissions; "
+
+else
+
+	echo "${launchAgentPath} exists"
+	scriptResult+="${launchAgentPath} exists; "
+
+fi
 
 
 
@@ -324,6 +397,23 @@ else
 	# Load the LaunchAgent
 	/bin/launchctl asuser "${loggedInUserID}" /bin/launchctl load -w "${launchAgentPath}"
 fi
+
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Hide Nudge in Finder & Launchpad
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+echo "Hide Nudge in Finder …"
+/usr/bin/chflags hidden "/Applications/Utilities/Nudge.app" 
+
+sleep 15
+
+echo "Hide Nudge in Launchpad …"
+/usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders -name com.apple.dock.launchpad)/db/db "DELETE FROM apps WHERE title='Nudge'"
+/usr/bin/killall Dock
+
+scriptResult+="Hid Nudge in Finder & Launchpad; "
 
 
 
