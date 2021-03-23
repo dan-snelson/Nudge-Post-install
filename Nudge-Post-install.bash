@@ -267,9 +267,9 @@ if [[ ! -f ${jsonPath} ]]; then
 	  }
 	],
 	"userExperience": {
-	  "allowedDeferrals": 9,
-	  "allowedDeferralsUntilForcedSecondaryQuitButton": 5,
-	  "approachingRefreshCycle": 60,
+	  "allowedDeferrals": 1000000,
+	  "allowedDeferralsUntilForcedSecondaryQuitButton": 14,
+	  "approachingRefreshCycle": 6000,
 	  "approachingWindowTime": 72,
 	  "elapsedRefreshCycle": 300,
 	  "imminentRefeshCycle": 600,
@@ -278,7 +278,7 @@ if [[ ! -f ${jsonPath} ]]; then
 	  "maxRandomDelayInSeconds": 1200,
 	  "noTimers": false,
 	  "nudgeRefreshCycle": 60,
-	  "randomDelay": true
+	  "randomDelay": false
 	},
 	"userInterface": {
 	  "fallbackLanguage": "en",
