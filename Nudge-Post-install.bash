@@ -77,31 +77,31 @@ function authorizationCheck() {
 
 function resetConfiguration() {
 
-	ScriptLog "Reset Configuration: ${1}"
+	echo "Reset Configuration: ${1}"
 	scriptResult+="Reset Configuration: ${1}; "
 
 	case ${1} in
 
 		"All" )
 			# Reset All Configuration Files JSON, LaunchAgent, LaunchDaemon
-			ScriptLog "Reset All Configuration Files"
+			echo "Reset All Configuration Files"
 
 			# Reset JSON
-			ScriptLog "Remove ${jsonPath} …"
+			echo "Remove ${jsonPath} …"
 			/bin/rm -fv ${jsonPath}
 			scriptResult+="Removed ${jsonPath}; "
 
 			# Reset LaunchAgent
-			ScriptLog "Unload ${launchAgentPath} …"
+			echo "Unload ${launchAgentPath} …"
 			/bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
-			ScriptLog "Remove ${launchAgentPath} …"
+			echo "Remove ${launchAgentPath} …"
 			/bin/rm -fv ${launchAgentPath}
 			scriptResult+="Removed ${launchAgentPath}; "
 
 			# Reset LaunchDaemon
-			ScriptLog "Unload ${launchDaemonPath} …"
+			echo "Unload ${launchDaemonPath} …"
 			/bin/launchctl unload -w "${launchDaemonPath}"
-			ScriptLog "Remove ${launchDaemonPath} …"
+			echo "Remove ${launchDaemonPath} …"
 			/bin/rm -fv ${launchDaemonPath}
 			scriptResult+="Removed ${launchDaemonPath}; "
 
@@ -110,32 +110,32 @@ function resetConfiguration() {
 
 		"JSON" )
 			# Reset JSON
-			ScriptLog "Remove ${jsonPath} …"
+			echo "Remove ${jsonPath} …"
 			/bin/rm -fv ${jsonPath}
 			scriptResult+="Removed ${jsonPath}; "
 			;;
 
 		"LaunchAgent" )
 			# Reset LaunchAgent
-			ScriptLog "Unload ${launchAgentPath} …"
+			echo "Unload ${launchAgentPath} …"
 			/bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
-			ScriptLog "Remove ${launchAgentPath} …"
+			echo "Remove ${launchAgentPath} …"
 			/bin/rm -fv ${launchAgentPath}
 			scriptResult+="Removed ${launchAgentPath}; "
 			;;
 
 		"LaunchDaemon" )
 			# Reset LaunchDaemon
-			ScriptLog "Unload ${launchDaemonPath} …"
+			echo "Unload ${launchDaemonPath} …"
 			/bin/launchctl unload -w "${launchDaemonPath}"
-			ScriptLog "Remove ${launchDaemonPath} …"
+			echo "Remove ${launchDaemonPath} …"
 			/bin/rm -fv ${launchDaemonPath}
 			scriptResult+="Removed ${launchDaemonPath}; "
 			;;
 
 		* )
 			# None of the expected options was entered; don't reset anything
-			ScriptLog "None of the expected reset options was entered; don't reset anything"
+			echo "None of the expected reset options was entered; don't reset anything"
 			scriptResult+="None of the expected reset options was entered; don't reset anything; "
 			;;
 
