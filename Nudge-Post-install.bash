@@ -18,6 +18,10 @@
 #		Leveraged additional Script Parameters
 #		Added "Reset" function
 #
+#	Version 0.0.3, 29-Apr-2021, Dan K. Snelson (@dan-snelson)
+#		Updated for macOS Big Sur 11.3
+#		Fix imminentRefreshCycle typo
+#
 ####################################################################################################
 
 
@@ -28,14 +32,14 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.2"
+scriptVersion="0.0.3"
 scriptResult=""
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
 authorizationKey="${4}"				# Authorization Key to prevent unauthorized execution via Jamf Remote
 plistDomain="${5}"					# Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
-requiredMinimumOSVersion="${6}"		# Required Minimum OS Version (i.e., 11.2.3)
-requiredInstallationDate="${7}"		# Required Installation Date & Time (i.e., 2021-03-17T10:00:00Z)
+requiredMinimumOSVersion="${6}"		# Required Minimum OS Version (i.e., 11.3)
+requiredInstallationDate="${7}"		# Required Installation Date & Time (i.e., 2021-05-07T10:00:00Z)
 resetConfiguration="${8}"			# Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
@@ -262,7 +266,8 @@ if [[ ! -f ${jsonPath} ]]; then
 		  "11.1",
 		  "11.2",
 		  "11.2.1",
-		  "11.2.2"
+		  "11.2.2",
+		  "11.2.3"
 		]
 	  }
 	],
@@ -272,7 +277,7 @@ if [[ ! -f ${jsonPath} ]]; then
 	  "approachingRefreshCycle": 6000,
 	  "approachingWindowTime": 72,
 	  "elapsedRefreshCycle": 300,
-	  "imminentRefeshCycle": 600,
+	  "imminentRefreshCycle": 600,
 	  "imminentWindowTime": 24,
 	  "initialRefreshCycle": 18000,
 	  "maxRandomDelayInSeconds": 1200,
@@ -350,6 +355,12 @@ if [[ ! -f ${launchAgentPath} ]]; then
 	<key>StartCalendarInterval</key>
 	<array>
 		<dict>
+			<key>Hour</key>
+  			<integer>9</integer>
+			<key>Minute</key>
+			<integer>17</integer>
+			<key>Hour</key>
+  			<integer>15</integer>
 			<key>Minute</key>
 			<integer>17</integer>
 		</dict>
