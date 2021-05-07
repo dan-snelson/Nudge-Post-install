@@ -267,7 +267,8 @@ if [[ ! -f ${jsonPath} ]]; then
 		  "11.2",
 		  "11.2.1",
 		  "11.2.2",
-		  "11.2.3"
+		  "11.2.3",
+		  "11.3"
 		]
 	  }
 	],
@@ -355,14 +356,12 @@ if [[ ! -f ${launchAgentPath} ]]; then
 	<key>StartCalendarInterval</key>
 	<array>
 		<dict>
-			<key>Hour</key>
-  			<integer>9</integer>
 			<key>Minute</key>
-			<integer>17</integer>
-			<key>Hour</key>
-  			<integer>15</integer>
+			<integer>0</integer>
+		</dict>
+		<dict>
 			<key>Minute</key>
-			<integer>17</integer>
+			<integer>30</integer>
 		</dict>
 	</array>
 </dict>
