@@ -22,6 +22,11 @@
 #		Updated for macOS Big Sur 11.3
 #		Fix imminentRefreshCycle typo
 #
+#	Version 0.0.4, 27-May-2021, Dan K. Snelson (@dan-snelson)
+#		Updated for macOS Big Sur 11.4
+#		Moved the "Hide Nudge in Finder & Launchpad" code into the "Reset > All" section
+#		Changed "userInterface" values to field names (to hopefully more easily identify in the UI)
+#
 ####################################################################################################
 
 
@@ -32,14 +37,14 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.3"
+scriptVersion="0.0.4"
 scriptResult=""
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
 authorizationKey="${4}"				# Authorization Key to prevent unauthorized execution via Jamf Remote
 plistDomain="${5}"					# Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
-requiredMinimumOSVersion="${6}"		# Required Minimum OS Version (i.e., 11.3)
-requiredInstallationDate="${7}"		# Required Installation Date & Time (i.e., 2021-05-07T10:00:00Z)
+requiredMinimumOSVersion="${6}"		# Required Minimum OS Version (i.e., 11.4)
+requiredInstallationDate="${7}"		# Required Installation Date & Time (i.e., 2021-05-31T20:00:00Z)
 resetConfiguration="${8}"			# Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
@@ -108,6 +113,17 @@ function resetConfiguration() {
 			echo "Remove ${launchDaemonPath} …"
 			/bin/rm -fv ${launchDaemonPath}
 			scriptResult+="Removed ${launchDaemonPath}; "
+
+			# Hide Nudge in Finder
+			echo "Hide Nudge in Finder …"
+			/usr/bin/chflags hidden "/Applications/Utilities/Nudge.app" 
+			scriptResult+="Hid Nudge in Finder; "
+
+			# Hide Nudge in Launchpad
+			echo "Hide Nudge in Launchpad …"
+			/usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders -name com.apple.dock.launchpad)/db/db "DELETE FROM apps WHERE title='Nudge'"
+			/usr/bin/killall Dock
+			scriptResult+="Hid Nudge in Launchpad; "
 
 			scriptResult+="Reset All Configuration Files; "
 			;;
@@ -250,11 +266,11 @@ if [[ ! -f ${jsonPath} ]]; then
 	},
 	"osVersionRequirements": [
 	  {
-		"aboutUpdateURL_disabled": "https://servicenow.churchofjesuschrist.org/support?id=kb_article_view&sysparm_article=KB0054571",
+		"aboutUpdateURL_disabled": "https://support.apple.com/en-us/HT211896#macos114",
 		"aboutUpdateURLs": [
 		  {
 			"_language": "en",
-			"aboutUpdateURL": "https://servicenow.churchofjesuschrist.org/support?id=kb_article_view&sysparm_article=KB0054571"
+			"aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos114"
 		  }
 		],
 		"majorUpgradeAppPath": "/Applications/Install macOS Big Sur.app",
@@ -268,7 +284,8 @@ if [[ ! -f ${jsonPath} ]]; then
 		  "11.2.1",
 		  "11.2.2",
 		  "11.2.3",
-		  "11.3"
+		  "11.3",
+		  "11.3.1"
 		]
 	  }
 	],
@@ -290,24 +307,24 @@ if [[ ! -f ${jsonPath} ]]; then
 	  "fallbackLanguage": "en",
 	  "forceFallbackLanguage": false,
 	  "forceScreenShotIcon": false,
-	  "iconDarkPath": "/usr/local/companyname/icons/WAS.icns",
-	  "iconLightPath": "/usr/local/companyname/icons/WAS.icns",
-	  "screenShotDarkPath": "/usr/local/companyname/icons/nudgeInstructionsDark.png",
-	  "screenShotLightPath": "/usr/local/companyname/icons/nudgeInstructions.png",
+	  "iconDarkPath": "",
+	  "iconLightPath": "",
+	  "screenShotDarkPath": "",
+	  "screenShotLightPath": "",
 	  "simpleMode": false,
 	  "singleQuitButton": true,
 	  "updateElements": [
 		{
 		  "_language": "en",
-		  "mainHeader": "Critical macOS Update Available",
-		  "subHeader": "",
-		  "mainContentHeader": "A critical macOS update is available",
-		  "mainContentSubHeader": "Updates may take 45 minutes or longer",
-		  "actionButtonText": "Open Software Update",
-		  "mainContentNote": "Instructions",
-		  "mainContentText": "To perform the update now, click \"Open Software Update,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"Later\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).\n\nPlease see KB0054571 or contact the Global Service Department with questions:\n+1 (801) 240-4357.",
-		  "informationButtonText": "View KB0054571 …",
-		  "primaryQuitButtonText": "Later",
+		  "mainHeader": "mainHeader",
+		  "subHeader": "subHeader",
+		  "mainContentHeader": "mainContentHeader",
+		  "mainContentSubHeader": "mainContentSubHeader",
+		  "actionButtonText": "actionButtonText",
+		  "mainContentNote": "mainContentNote",
+		  "mainContentText": "mainContentText \n\nTo perform the update now, click \"actionButtonText,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"primaryQuitButtonText\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).\n\nPlease see KB8675309 or contact the Global Service Department with questions:\n+1 (801) 555-1212.",
+		  "informationButtonText": "informationButtonText",
+		  "primaryQuitButtonText": "primaryQuitButtonText",
 		  "secondaryQuitButtonText": "secondaryQuitButtonText"
 		}
 	  ]
@@ -349,7 +366,7 @@ if [[ ! -f ${launchAgentPath} ]]; then
 	<array>
 		<string>/Applications/Utilities/Nudge.app/Contents/MacOS/Nudge</string>
 		<string>-json-url</string>
-		<string>file:////${jsonPath}</string>
+		<string>file:///${jsonPath}</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
@@ -407,23 +424,6 @@ else
 	# Load the LaunchAgent
 	/bin/launchctl asuser "${loggedInUserID}" /bin/launchctl load -w "${launchAgentPath}"
 fi
-
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Hide Nudge in Finder & Launchpad
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-echo "Hide Nudge in Finder …"
-/usr/bin/chflags hidden "/Applications/Utilities/Nudge.app" 
-
-sleep 15
-
-echo "Hide Nudge in Launchpad …"
-/usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders -name com.apple.dock.launchpad)/db/db "DELETE FROM apps WHERE title='Nudge'"
-/usr/bin/killall Dock
-
-scriptResult+="Hid Nudge in Finder & Launchpad; "
 
 
 
