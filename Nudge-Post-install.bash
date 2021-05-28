@@ -92,7 +92,7 @@ function resetConfiguration() {
 	case ${1} in
 
 		"All" )
-			# Reset All Configuration Files JSON, LaunchAgent, LaunchDaemon
+			# Reset JSON, LaunchAgent, LaunchDaemon, Hide Nudge
 			echo "Reset All Configuration Files"
 
 			# Reset JSON
