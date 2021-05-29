@@ -92,7 +92,7 @@ function resetConfiguration() {
 	case ${1} in
 
 		"All" )
-			# Reset All Configuration Files JSON, LaunchAgent, LaunchDaemon
+			# Reset JSON, LaunchAgent, LaunchDaemon, Hide Nudge
 			echo "Reset All Configuration Files"
 
 			# Reset JSON
@@ -306,7 +306,7 @@ if [[ ! -f ${jsonPath} ]]; then
 	"userInterface": {
 	  "fallbackLanguage": "en",
 	  "forceFallbackLanguage": false,
-	  "forceScreenShotIcon": false,
+	  "forceScreenShotIcon": true,
 	  "iconDarkPath": "",
 	  "iconLightPath": "",
 	  "screenShotDarkPath": "",
@@ -322,7 +322,7 @@ if [[ ! -f ${jsonPath} ]]; then
 		  "mainContentSubHeader": "mainContentSubHeader",
 		  "actionButtonText": "actionButtonText",
 		  "mainContentNote": "mainContentNote",
-		  "mainContentText": "mainContentText \n\nTo perform the update now, click \"actionButtonText,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"primaryQuitButtonText\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).\n\nPlease see KB8675309 or contact the Global Service Department with questions:\n+1 (801) 555-1212.",
+		  "mainContentText": "mainContentText \n\nTo perform the update now, click \"actionButtonText,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"primaryQuitButtonText\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).",
 		  "informationButtonText": "informationButtonText",
 		  "primaryQuitButtonText": "primaryQuitButtonText",
 		  "secondaryQuitButtonText": "secondaryQuitButtonText"
