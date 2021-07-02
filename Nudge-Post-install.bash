@@ -27,6 +27,10 @@
 #		Moved the "Hide Nudge in Finder & Launchpad" code into the "Reset > All" section
 #		Changed "userInterface" values to field names (to hopefully more easily identify in the UI)
 #
+#	Version 0.0.5, 02-Jul-2021, Dan K. Snelson (@dan-snelson)
+#		Updated for macOS Big Sur 11.5
+#		Corrected Hiding Nudge in Launchpad for macOS Monterey
+#
 ####################################################################################################
 
 
@@ -37,7 +41,7 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.4"
+scriptVersion="0.0.5"
 scriptResult=""
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
@@ -121,7 +125,7 @@ function resetConfiguration() {
 
 			# Hide Nudge in Launchpad
 			echo "Hide Nudge in Launchpad …"
-			/usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders -name com.apple.dock.launchpad)/db/db "DELETE FROM apps WHERE title='Nudge'"
+			/usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders \( -name com.apple.dock.launchpad -a -user ${loggedInUser} \) 2> /dev/null)/db/db "DELETE FROM apps WHERE title='Nudge';"
 			/usr/bin/killall Dock
 			scriptResult+="Hid Nudge in Launchpad; "
 
@@ -285,7 +289,8 @@ if [[ ! -f ${jsonPath} ]]; then
 		  "11.2.2",
 		  "11.2.3",
 		  "11.3",
-		  "11.3.1"
+		  "11.3.1",
+		  "11.4"
 		]
 	  }
 	],
