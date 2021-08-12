@@ -264,75 +264,77 @@ if [[ ! -f ${jsonPath} ]]; then
 	cat <<EOF > ${jsonPath}
 {
 	"optionalFeatures": {
-	  "asyncronousSoftwareUpdate": true,
-	  "attemptToFetchMajorUpgrade": true,
-	  "enforceMinorUpdates": true
+		"asyncronousSoftwareUpdate": true,
+		"attemptToFetchMajorUpgrade": true,
+		"enforceMinorUpdates": true
 	},
 	"osVersionRequirements": [
-	  {
+		{
 		"aboutUpdateURL_disabled": "https://support.apple.com/en-us/HT211896#macos114",
 		"aboutUpdateURLs": [
-		  {
+			{
 			"_language": "en",
 			"aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos114"
-		  }
+			}
 		],
 		"majorUpgradeAppPath": "/Applications/Install macOS Big Sur.app",
 		"requiredInstallationDate": "${requiredInstallationDate}",
 		"requiredMinimumOSVersion": "${requiredMinimumOSVersion}",
 		"targetedOSVersions": [
-		  "11.0",
-		  "11.0.1",
-		  "11.1",
-		  "11.2",
-		  "11.2.1",
-		  "11.2.2",
-		  "11.2.3",
-		  "11.3",
-		  "11.3.1",
-		  "11.4"
+			"11.0",
+			"11.0.1",
+			"11.1",
+			"11.2",
+			"11.2.1",
+			"11.2.2",
+			"11.2.3",
+			"11.3",
+			"11.3.1",
+			"11.4",
+			"11.5",
+			"11.5.1"
 		]
-	  }
+		}
 	],
 	"userExperience": {
-	  "allowedDeferrals": 1000000,
-	  "allowedDeferralsUntilForcedSecondaryQuitButton": 14,
-	  "approachingRefreshCycle": 6000,
-	  "approachingWindowTime": 72,
-	  "elapsedRefreshCycle": 300,
-	  "imminentRefreshCycle": 600,
-	  "imminentWindowTime": 24,
-	  "initialRefreshCycle": 18000,
-	  "maxRandomDelayInSeconds": 1200,
-	  "noTimers": false,
-	  "nudgeRefreshCycle": 60,
-	  "randomDelay": false
+		"allowedDeferrals": 1000000,
+		"allowedDeferralsUntilForcedSecondaryQuitButton": 14,
+		"approachingRefreshCycle": 6000,
+		"approachingWindowTime": 72,
+		"elapsedRefreshCycle": 300,
+		"imminentRefreshCycle": 600,
+		"imminentWindowTime": 24,
+		"initialRefreshCycle": 18000,
+		"maxRandomDelayInSeconds": 1200,
+		"noTimers": false,
+		"nudgeRefreshCycle": 60,
+		"randomDelay": false
 	},
 	"userInterface": {
-	  "fallbackLanguage": "en",
-	  "forceFallbackLanguage": false,
-	  "forceScreenShotIcon": true,
-	  "iconDarkPath": "",
-	  "iconLightPath": "",
-	  "screenShotDarkPath": "",
-	  "screenShotLightPath": "",
-	  "simpleMode": false,
-	  "singleQuitButton": true,
-	  "updateElements": [
+		"fallbackLanguage": "en",
+		"forceFallbackLanguage": false,
+		"forceScreenShotIcon": true,
+		"iconDarkPath": "",
+		"iconLightPath": "",
+		"screenShotDarkPath": "",
+		"screenShotLightPath": "",
+		"simpleMode": false,
+		"singleQuitButton": true,
+		"updateElements": [
 		{
-		  "_language": "en",
-		  "mainHeader": "mainHeader",
-		  "subHeader": "subHeader",
-		  "mainContentHeader": "mainContentHeader",
-		  "mainContentSubHeader": "mainContentSubHeader",
-		  "actionButtonText": "actionButtonText",
-		  "mainContentNote": "mainContentNote",
-		  "mainContentText": "mainContentText \n\nTo perform the update now, click \"actionButtonText,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"primaryQuitButtonText\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).",
-		  "informationButtonText": "informationButtonText",
-		  "primaryQuitButtonText": "primaryQuitButtonText",
-		  "secondaryQuitButtonText": "secondaryQuitButtonText"
+			"_language": "en",
+			"mainHeader": "mainHeader",
+			"subHeader": "subHeader",
+			"mainContentHeader": "mainContentHeader",
+			"mainContentSubHeader": "mainContentSubHeader",
+			"actionButtonText": "actionButtonText",
+			"mainContentNote": "mainContentNote",
+			"mainContentText": "mainContentText \n\nTo perform the update now, click \"actionButtonText,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"primaryQuitButtonText\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).",
+			"informationButtonText": "informationButtonText",
+			"primaryQuitButtonText": "primaryQuitButtonText",
+			"secondaryQuitButtonText": "secondaryQuitButtonText"
 		}
-	  ]
+		]
 	}
 }
 EOF
