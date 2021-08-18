@@ -30,7 +30,10 @@
 #	Version 0.0.5, 02-Jul-2021, Dan K. Snelson (@dan-snelson)
 #		Updated for macOS Big Sur 11.5
 #		Corrected Hiding Nudge in Launchpad for macOS Monterey
-#
+
+#	Version 0.0.6, 18-Aug-2021, Dan K. Snelson (@dan-snelson)
+#		Updated for Nudge 1.0.1
+
 ####################################################################################################
 
 
@@ -41,7 +44,7 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.5"
+scriptVersion="0.0.6"
 scriptResult=""
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
@@ -98,6 +101,12 @@ function resetConfiguration() {
 		"All" )
 			# Reset JSON, LaunchAgent, LaunchDaemon, Hide Nudge
 			echo "Reset All Configuration Files"
+
+			# Reset User Preferences
+			echo "Reset User Preferences"
+			/bin/rm -fv /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
+			/usr/bin/pkill -l -U "${loggedInUser}" cfprefsd
+			scriptResult+="Removed User Preferences; "
 
 			# Reset JSON
 			echo "Remove ${jsonPath} …"
@@ -264,17 +273,20 @@ if [[ ! -f ${jsonPath} ]]; then
 	cat <<EOF > ${jsonPath}
 {
 	"optionalFeatures": {
+		"acceptableApplicationBundleIDs": [
+			"us.zoom.xos"
+		],
 		"asyncronousSoftwareUpdate": true,
 		"attemptToFetchMajorUpgrade": true,
 		"enforceMinorUpdates": true
 	},
 	"osVersionRequirements": [
 		{
-		"aboutUpdateURL_disabled": "https://support.apple.com/en-us/HT211896#macos114",
+		"aboutUpdateURL_disabled": "https://support.apple.com/en-us/HT211896#macos1152",
 		"aboutUpdateURLs": [
 			{
 			"_language": "en",
-			"aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos114"
+			"aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos1152"
 			}
 		],
 		"majorUpgradeAppPath": "/Applications/Install macOS Big Sur.app",
@@ -292,11 +304,13 @@ if [[ ! -f ${jsonPath} ]]; then
 			"11.3.1",
 			"11.4",
 			"11.5",
-			"11.5.1"
+			"11.5.1",
+			"11.5.2"
 		]
 		}
 	],
 	"userExperience": {
+		"allowUserQuitDeferrals": true,
 		"allowedDeferrals": 1000000,
 		"allowedDeferralsUntilForcedSecondaryQuitButton": 14,
 		"approachingRefreshCycle": 6000,
@@ -323,16 +337,19 @@ if [[ ! -f ${jsonPath} ]]; then
 		"updateElements": [
 		{
 			"_language": "en",
-			"mainHeader": "mainHeader",
-			"subHeader": "subHeader",
-			"mainContentHeader": "mainContentHeader",
-			"mainContentSubHeader": "mainContentSubHeader",
 			"actionButtonText": "actionButtonText",
-			"mainContentNote": "mainContentNote",
-			"mainContentText": "mainContentText \n\nTo perform the update now, click \"actionButtonText,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"primaryQuitButtonText\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).",
+			"customDeferralButtonText": "customDeferralButtonText",
 			"informationButtonText": "informationButtonText",
+			"mainContentHeader": "mainContentHeader",
+			"mainContentNote": "mainContentNote",
+			"mainContentSubHeader": "mainContentSubHeader",
+			"mainContentText": "mainContentText \n\nTo perform the update now, click \"actionButtonText,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"primaryQuitButtonText\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).",
+			"mainHeader": "mainHeader",
+			"oneDayDeferralButtonText": "oneDayDeferralButtonText",
+			"oneHourDeferralButtonText": "oneHourDeferralButtonText",
 			"primaryQuitButtonText": "primaryQuitButtonText",
-			"secondaryQuitButtonText": "secondaryQuitButtonText"
+			"secondaryQuitButtonText": "secondaryQuitButtonText",
+			"subHeader": "subHeader"
 		}
 		]
 	}
