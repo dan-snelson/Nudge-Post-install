@@ -30,7 +30,7 @@
 #	Version 0.0.5, 02-Jul-2021, Dan K. Snelson (@dan-snelson)
 #		Updated for macOS Big Sur 11.5
 #		Corrected Hiding Nudge in Launchpad for macOS Monterey
-
+#
 #	Version 0.0.6, 18-Aug-2021, Dan K. Snelson (@dan-snelson)
 #		Updated for Nudge 1.0.1
 
