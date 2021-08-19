@@ -325,6 +325,7 @@ if [[ ! -f ${jsonPath} ]]; then
 		"randomDelay": false
 	},
 	"userInterface": {
+		"actionButtonPath": "jamfselfservice://content?entity=policy&id=1&action=execute",
 		"fallbackLanguage": "en",
 		"forceFallbackLanguage": false,
 		"forceScreenShotIcon": true,
