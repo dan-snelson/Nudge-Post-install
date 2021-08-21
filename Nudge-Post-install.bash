@@ -333,6 +333,7 @@ if [[ ! -f ${jsonPath} ]]; then
 		"iconLightPath": "",
 		"screenShotDarkPath": "",
 		"screenShotLightPath": "",
+		"showDeferralCount": true,
 		"simpleMode": false,
 		"singleQuitButton": true,
 		"updateElements": [
