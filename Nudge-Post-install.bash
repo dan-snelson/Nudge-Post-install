@@ -283,8 +283,8 @@ if [[ ! -f ${jsonPath} ]]; then
 	"osVersionRequirements": [
 		{
 			"aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos1152",
-			"requiredInstallationDate": "2021-08-30T00:00:00Z",
-			"requiredMinimumOSVersion": "11.5.2",
+			"requiredInstallationDate": "${requiredInstallationDate}",
+			"requiredMinimumOSVersion": "${requiredMinimumOSVersion}",
 			"targetedOSVersions": [
 				"11.0",
 				"11.0.1",
@@ -303,8 +303,8 @@ if [[ ! -f ${jsonPath} ]]; then
 		},
 		{
 			"aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos1152",
-			"requiredInstallationDate": "2021-08-30T00:00:00Z",
-			"requiredMinimumOSVersion": "11.5.2",
+			"requiredInstallationDate": "${requiredInstallationDate}",
+			"requiredMinimumOSVersion": "${requiredMinimumOSVersion}",
 			"targetedOSVersionsRule": "11"
 		}
 	],
