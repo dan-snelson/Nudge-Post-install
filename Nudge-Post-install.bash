@@ -103,10 +103,14 @@ function resetConfiguration() {
 			echo "Reset All Configuration Files"
 
 			# Reset User Preferences
-			echo "Reset User Preferences"
-			/bin/rm -fv /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
-			/usr/bin/pkill -l -U "${loggedInUser}" cfprefsd
-			scriptResult+="Removed User Preferences; "
+			# For testing only; see:
+			# * https://github.com/macadmins/nudge/wiki/User-Deferrals#resetting-values-when-a-new-nudge-event-is-detected
+			# * https://github.com/macadmins/nudge/wiki/User-Deferrals#testing-and-resetting-nudge
+
+			# echo "Reset User Preferences"
+			# /bin/rm -fv /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
+			# /usr/bin/pkill -l -U "${loggedInUser}" cfprefsd
+			# scriptResult+="Removed User Preferences; "
 
 			# Reset JSON
 			echo "Remove ${jsonPath} …"
