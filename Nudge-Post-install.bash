@@ -280,6 +280,7 @@ if [[ ! -f ${jsonPath} ]]; then
 		"acceptableApplicationBundleIDs": [
 			"us.zoom.xos"
 		],
+		"aggressiveUserExperience": true,
 		"asyncronousSoftwareUpdate": true,
 		"attemptToFetchMajorUpgrade": true,
 		"enforceMinorUpdates": true
