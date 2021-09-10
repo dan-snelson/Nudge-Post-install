@@ -13,6 +13,16 @@ On the off-chance this may help other Jamf Pro admins, we’re currently testing
 
 ![Jamf Pro Script Parameter Labels](images/Screen%20Shot%202021-03-22%20at%2012.55.06%20PM.png)
 
+---
+
+Beginning with **Nudge 1.1.0**, Mac Admins can leverage `userInterface : actionButtonPath` to execute a [Jamf Pro policy](https://docs.jamf.com/10.32.0/jamf-pro/administrator-guide/Jamf_Self_Service_for_macOS_URL_Schemes.html).
+
+```json
+"userInterface": {
+	"actionButtonPath": "jamfselfservice://content?entity=policy&id=1&action=execute",
+```
+
+To open **System Preferences > Software Update** (i.e., Nudge v1.0.0 behavior), [delete the entire `actionButtonPath` line](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash#L319).
 
 ---
 
