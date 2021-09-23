@@ -56,7 +56,14 @@ Carefully review [Nudge Preferences](https://github.com/macadmins/nudge/wiki/Pre
 1. **Option No. 1** is when you are first testing Nudge. You'll install the [latest Nudge.app](https://github.com/macadmins/nudge/releases) and then review the Nudge [README](https://github.com/macadmins/nudge/blob/main/README.md) and  [Getting Started](https://github.com/macadmins/nudge/wiki/Getting-Started) pages in your favorite Web browser and use Terminal to modify Nudge's configuration. When you're satisfied with your Nudge configuration on your local test Mac, it's time to deploy to your testing group.
 1. Every release of Nudge includes a [`LaunchAgent` package](https://github.com/macadmins/nudge/blob/main/README.md#scheduling-nudge-to-run), which we see in **Option No. 2**. This `LaunchAgent` will open Nudge every 30 minutes — on the hour and half-past the hour.  You will still need to deploy the Nudge app itself,  and with this option, a [Configuration Profile is deployed via Jamf Pro](https://github.com/macadmins/nudge/wiki/Jamf-Pro-Guide#configuration-profile) for Nudge's settings.
 	- If you deploy a standard Configuration Profile, **it must be signed** or it *will be* modified by Jamf Pro. (See: [Creating a Signing Certificate Using Jamf Pro's Built-in CA to Use for Signing Configuration Profiles and Packages](https://www.jamf.com/jamf-nation/articles/649/).)
-1. **Option No. 3** leverages the [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash) script deployed via the Jamf Pro Script Payload to create both a custom `LaunchAgent` and local JSON. (You should be comfortable editing scripts when using this option.)
+1. **Option No. 3** leverages the [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash) script deployed via the Jamf Pro Script Payload to create:
+	- LaunchAgent: Opens Nudge 
+	- LaunchDaemon: Redirect Logs
+	- Local JSON: Configures Nudge
+	- Hides Nudge: Finder & Launchpad
+	- Reset function: Policy Script Parameter
+
+	**Note:** All support for this workflow will need to be asked in the [author's GitHub](https://github.com/dan-snelson/Nudge-Post-install/discussions) and you should be comfortable editing scripts when using this option.
 
 The remainder of this article focuses on Option No. 3.
 
