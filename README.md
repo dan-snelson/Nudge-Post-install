@@ -36,7 +36,9 @@ This article details **Option No. 3** and presumes you are comfortable editing s
 Ensure you understand what Nudge _is_ and what Nudge is **not**:
 
 > Nudge is application for enforcing macOS updates, written in Swift 5.5 and SwiftUI 5.2. In order to use the newest features of Swift, Nudge will only work on macOS 11.0 and higher.
-> 
+>
+> Rather than trying to install updates via `softwareupdate`, Nudge merely prompts users to install updates via Apple-approved methods: System Preferences.
+>
 > Major application upgrades are achieved via a standalone installer (i.e., Install macOS Monterey.app).
 
 While Nudge will compare a Mac's currently installed version of macOS to the value you set for Nudge's `requiredMinimumOSVersion`, before deploying Nudge to computers with Jamf Pro, review the computers' **Inventory > Software Updates** to ensure the update users are being prompted to install is available.
