@@ -142,7 +142,7 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 - **Maintenance**
 	- Update Inventory 
 - **Files and Processes**
-	- Execute Command: `/usr/bin/chflags hidden "/Applications/Utilities/Nudge.app" ; loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }' ) ; /usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders \( -name com.apple.dock.launchpad -a -user ${loggedInUser} \) 2> /dev/null)/db/db "DELETE FROM apps WHERE title='Nudge';" ; /usr/bin/killall Dock`
+	- Execute Command: `/usr/bin/chflags hidden "/Applications/Utilities/Nudge.app" ; loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }' ) ; [ -z "${loggedInUser}" ] && echo "Did not detect user" || /usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders \( -name com.apple.dock.launchpad -a -user ${loggedInUser} \) 2> /dev/null)/db/db "DELETE FROM apps WHERE title='Nudge';" && /usr/bin/killall Dock`
 #### Scope
 - **Targets:** Update Smart: Nudge
 - **Limitations:** No Limitations
