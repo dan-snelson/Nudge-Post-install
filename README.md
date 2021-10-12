@@ -94,7 +94,7 @@ Using the Jamf Pro Administrator's Guide [Scripts](https://docs.jamf.com/10.32.0
 	"actionButtonPath": "jamfselfservice://content?entity=policy&id=1&action=execute",
 ```
 
-To open **System Preferences > Software Update** (i.e., Nudge v1.0.0 behavior), [delete the entire `actionButtonPath` line](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash#L319).
+To open **System Preferences > Software Update** (i.e., Nudge v1.0.0 behavior), [delete the entire `actionButtonPath` line](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash#L328).
 
 ---
 
