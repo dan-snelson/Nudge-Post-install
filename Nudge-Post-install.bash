@@ -34,6 +34,11 @@
 #	Version 0.0.6, 18-Aug-2021, Dan K. Snelson (@dan-snelson)
 #		Updated for Nudge 1.1.0
 #
+#	Version 0.0.7, 12-Oct-2021, Dan K. Snelson (@dan-snelson)
+#		Added check for logged-in user before attempting to hide Nudge in Launchpad. (Thanks for the feedback and testing, @Jotai)
+#		Compared "Nudge JSON client-side" code to "Nudge / Example Assets / com.github.macadmins.Nudge.json"
+#		https://github.com/macadmins/nudge/blob/main/Example%20Assets/com.github.macadmins.Nudge.json
+#
 ####################################################################################################
 
 
@@ -44,7 +49,7 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.6"
+scriptVersion="0.0.7"
 scriptResult=""
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
@@ -138,9 +143,13 @@ function resetConfiguration() {
 
 			# Hide Nudge in Launchpad
 			echo "Hide Nudge in Launchpad …"
-			/usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders \( -name com.apple.dock.launchpad -a -user ${loggedInUser} \) 2> /dev/null)/db/db "DELETE FROM apps WHERE title='Nudge';"
-			/usr/bin/killall Dock
-			scriptResult+="Hid Nudge in Launchpad; "
+			if [[ -z "$loggedInUser" ]]; then
+				scriptResult+="Did not detect logged-in user"
+			else
+				/usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders \( -name com.apple.dock.launchpad -a -user ${loggedInUser} \) 2> /dev/null)/db/db "DELETE FROM apps WHERE title='Nudge';"
+				/usr/bin/killall Dock
+				scriptResult+="Hid Nudge in Launchpad for ${loggedInUser}; "
+			fi
 
 			scriptResult+="Reset All Configuration Files; "
 			;;
@@ -287,17 +296,17 @@ if [[ ! -f ${jsonPath} ]]; then
 	},
 	"osVersionRequirements": [
 		{
-		"aboutUpdateURL_disabled": "https://support.apple.com/en-us/HT211896#macos1152",
+		"aboutUpdateURL_disabled": "https://support.apple.com/en-us/HT211896#macos116",
 		"aboutUpdateURLs": [
 			{
 			"_language": "en",
-			"aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos1152"
+			"aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos116"
 			}
 		],
-		"majorUpgradeAppPath": "/Applications/Install macOS Big Sur.app",
+		"majorUpgradeAppPath": "/Applications/Install macOS Monterey.app",
 		"requiredInstallationDate": "${requiredInstallationDate}",
 		"requiredMinimumOSVersion": "${requiredMinimumOSVersion}",
-		"targetedOSVersionsRule": "11"
+		"targetedOSVersionsRule": "default"
 		}
 	],
 	"userExperience": {
@@ -319,14 +328,14 @@ if [[ ! -f ${jsonPath} ]]; then
 		"actionButtonPath": "jamfselfservice://content?entity=policy&id=1&action=execute",
 		"fallbackLanguage": "en",
 		"forceFallbackLanguage": false,
-		"forceScreenShotIcon": true,
+		"forceScreenShotIcon": false,
 		"iconDarkPath": "",
 		"iconLightPath": "",
 		"screenShotDarkPath": "",
 		"screenShotLightPath": "",
 		"showDeferralCount": true,
 		"simpleMode": false,
-		"singleQuitButton": true,
+		"singleQuitButton": false,
 		"updateElements": [
 		{
 			"_language": "en",
