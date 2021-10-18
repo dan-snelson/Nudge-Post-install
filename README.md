@@ -76,8 +76,14 @@ The remainder of this article focuses on **Option No. 3**.
 ---
 ## Script
 
-Using the Jamf Pro Administrator's Guide [Scripts](https://docs.jamf.com/10.32.0/jamf-pro/administrator-guide/Scripts.html) as a guide, add the [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash) script to Jamf Pro:
-##### Jamf Pro Script Parameter Labels
+### Resources
+
+- [Jamf Pro Administrator's Guide Scripts](https://docs.jamf.com/10.32.0/jamf-pro/administrator-guide/Scripts.html)
+- [Screencast](https://rumble.com/vnwtle-nudge-post-install-script.html) (02:02; no audio)
+
+Add the [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash) script to Jamf Pro:
+
+#### Jamf Pro Script Parameter Labels
 
 - Parameter 4: Authorization Key
 - Parameter 5: Reverse Domain Name Notation (i.e., `org.churchofjesuschrist`)
@@ -151,6 +157,9 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 <hr width="33%">
 
 #### Nudge Configuration for General Workforce
+
+- [Screencast](https://rumble.com/vnwthi-nudge-post-install-policy.html) (01:31; no audio)
+
 ##### Options
 - **General**
 	- Display Name: Nudge Configuration for General Workforce
