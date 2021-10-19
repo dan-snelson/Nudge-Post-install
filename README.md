@@ -86,7 +86,7 @@ The remainder of this article focuses on **Option No. 3**.
 ### Resources
 
 - [Jamf Pro Administrator's Guide Scripts](https://docs.jamf.com/10.32.0/jamf-pro/administrator-guide/Scripts.html)
-- [Screencast](https://rumble.com/vnwtle-nudge-post-install-script.html) (02:02; no audio)
+- [Screencast](https://rumble.com/vnxv7u-nudge-post-install-script.html) (01:44; no audio)
 
 Add the [Nudge Post-install](Nudge-Post-install.bash) script to Jamf Pro:
 
@@ -167,7 +167,7 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 
 #### Nudge Configuration for General Workforce
 
-- [Screencast](https://rumble.com/vnwthi-nudge-post-install-policy.html) (01:31; no audio)
+- [Screencast](https://rumble.com/vnxvb6-nudge-post-install-policy.html) (01:53; no audio)
 
 ##### Options
 - **General**
