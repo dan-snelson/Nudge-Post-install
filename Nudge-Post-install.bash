@@ -39,6 +39,10 @@
 #		Compared "Nudge JSON client-side" code to "Nudge / Example Assets / com.github.macadmins.Nudge.json"
 #		https://github.com/macadmins/nudge/blob/main/Example%20Assets/com.github.macadmins.Nudge.json
 #
+#	Version 0.0.8, 19-Oct-2021, Dan K. Snelson (@dan-snelson)
+#		Enforce latest version on both macOS Monterey and macOS Big Sur
+#		See: https://github.com/macadmins/nudge/wiki/targetedOSVersionsRule#real-world-example-2
+#
 ####################################################################################################
 
 
@@ -49,15 +53,17 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.7"
+scriptVersion="0.0.8"
 scriptResult=""
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
-authorizationKey="${4}"			# Authorization Key to prevent unauthorized execution via Jamf Remote
-plistDomain="${5}"			# Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
-requiredMinimumOSVersion="${6}"		# Required Minimum OS Version (i.e., 11.4)
-requiredInstallationDate="${7}"		# Required Installation Date & Time (i.e., 2021-05-31T20:00:00Z)
-resetConfiguration="${8}"		# Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
+authorizationKey="${4}"						# Authorization Key to prevent unauthorized execution via Jamf Remote
+plistDomain="${5}"							# Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
+resetConfiguration="${6}"					# Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
+requiredBigSurMinimumOSVersion="${7}"		# Required macOS Big Sur Minimum Version (i.e., 11.6)
+requiredBigSurInstallationDate="${8}"		# Required macOS Big SurInstallation Date & Time (i.e., 2021-10-01T10:00:00Z)
+requiredMontereyMinimumOSVersion="${9}"		# Required macOS Monterey Minimum Version (i.e., 12.0.1)
+requiredMontereyInstallationDate="${10}"	# Required macOS Monterey Installation Date & Time (i.e., 2021-11-12T10:00:00Z)
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
 launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
@@ -296,17 +302,28 @@ if [[ ! -f ${jsonPath} ]]; then
 	},
 	"osVersionRequirements": [
 		{
-		"aboutUpdateURL_disabled": "https://support.apple.com/en-us/HT211896#macos116",
 		"aboutUpdateURLs": [
 			{
 			"_language": "en",
 			"aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos116"
 			}
 		],
+		"majorUpgradeAppPath": "/Applications/Install macOS Big Sur.app",
+		"requiredInstallationDate": "${requiredBigSurInstallationDate}",
+		"requiredMinimumOSVersion": "${requiredBigSurMinimumOSVersion}",
+		"targetedOSVersionsRule": "11"
+		},
+		{
+		"aboutUpdateURLs": [
+			{
+			"_language": "en",
+			"aboutUpdateURL": "https://www.apple.com/macos/monterey/"
+			}
+		],
 		"majorUpgradeAppPath": "/Applications/Install macOS Monterey.app",
-		"requiredInstallationDate": "${requiredInstallationDate}",
-		"requiredMinimumOSVersion": "${requiredMinimumOSVersion}",
-		"targetedOSVersionsRule": "default"
+		"requiredInstallationDate": "${requiredMontereyInstallationDate}",
+		"requiredMinimumOSVersion": "${requiredMontereyMinimumOSVersion}",
+		"targetedOSVersionsRule": "12"
 		}
 	],
 	"userExperience": {
