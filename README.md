@@ -10,6 +10,7 @@
 ---
 
 ## Contents
+- [Presentations](#presentations)
 - [Step Zero](#step-zero)
 - [Plan Your Deployment Stategy](#plan-your-deployment-stategy)
 - [Configuration Methods](#configuration-methods)
@@ -21,12 +22,19 @@
 
 ---
 
+### Presentations
 
+- JNUC 2021
+  - ["Nudge" users to keep macOS up-to-date with Jamf Pro](https://rumble.com/vnqm8k-nudge-users-to-keep-macos-up-to-date-with-jamf-pro.html)
+  - [Nudge v1.1.0 Features](https://rumble.com/vlsp5h-nudge-v1.1.0-features.html)
+
+---
 ## Step Zero
 
 Please first review Nudge's [Jamf Pro Guide](https://github.com/macadmins/nudge/wiki/Jamf-Pro-Guide). 
 
 This article details **Option No. 3** and presumes you are comfortable editing scripts.
+
 
 ---
 
@@ -35,11 +43,9 @@ This article details **Option No. 3** and presumes you are comfortable editing s
 ### Understanding Nudge
 Ensure you understand what Nudge _is_ and what Nudge is **not**:
 
-> Nudge is application for enforcing macOS updates, written in Swift 5.5 and SwiftUI 5.2. In order to use the newest features of Swift, Nudge will only work on macOS 11.0 and higher.
+> Nudge is an multi-linguistic application, offering custom user deferrals, which strongly encourages macOS updates. Written in Swift 5.5 and SwiftUI 5.2, Nudge will only work on macOS Big Sur 11 and later.
 >
-> Rather than trying to install updates via `softwareupdate`, Nudge merely prompts users to install updates via Apple-approved methods: System Preferences.
->
-> Major application upgrades are achieved via a standalone installer (i.e., Install macOS Monterey.app).
+> Rather than trying to install updates via the macOS built-in `softwareupdate` binary, Nudge prompts users to install updates via Apple approved / tested methods: **System Preferences > Software Update** and major application upgrades via the standalone macOS installer (i.e., Install macOS Monterey.app).
 
 While Nudge will compare a Mac's currently installed version of macOS to the value you set for Nudge's `requiredMinimumOSVersion`, before deploying Nudge to computers with Jamf Pro, review the computers' **Inventory > Software Updates** to ensure the update users are being prompted to install is available.
 
@@ -87,8 +93,8 @@ Add the [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/b
 
 - Parameter 4: Authorization Key
 - Parameter 5: Reverse Domain Name Notation (i.e., `org.churchofjesuschrist`)
-- Parameter 6: Required Minimum OS Version (i.e., `11.5.2`)
-- Parameter 7: Required Installation Date & Time (i.e., `2021-08-18T23:00:00Z`)
+- Parameter 6: Required Minimum OS Version (i.e., `11.6`)
+- Parameter 7: Required Installation Date & Time (i.e., `2021-10-01T23:00:00Z`)
 - Parameter 8: Configuration Files to Reset (i.e., `None (blank) | All | JSON | LaunchAgent | LaunchDaemon`)
 
 <img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Nudge%20Post-install%20Jamf%20Pro%20Script%20Parameter%20Labels.png" width="900">
@@ -225,8 +231,3 @@ Nudge's `userInterface : updateElements` Field Names (before deadline)
 
 Nudge's `userInterface : updateElements` Field Names (deferral options disabled after deadline)
 <img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Field%20Names%20(deadline%20past).png" width="900">
-
-### Presentations
-
-- JNUC 2021: [“Nudge” users to keep macOS up-to-date with Jamf Pro (1111)](https://reg.jamf.com/flow/jamf/jnuc2021/sessioncatalog/page/sessioncatalog/session/1616180609550001SuD8)
-  - Tuesday, 19-Oct-2021, 1:00 PM - 1:30 PM MDT
