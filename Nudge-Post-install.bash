@@ -71,7 +71,7 @@ launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
 # Set deadline variable based on OS version
 osProductVersion=$( /usr/bin/sw_vers -productVersion )
 case "${osProductVersion}" in
-	11* ) deadline="${requiredBigSurInstallationDate}"		;;
+	11* ) deadline="${requiredBigSurInstallationDate}"	;;
 	12* ) deadline="${requiredMontereyInstallationDate}"	;;
 esac
 
