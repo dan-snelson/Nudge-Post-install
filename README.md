@@ -1,6 +1,6 @@
 # Nudge Post-install
 
-**Configures [Nudge](https://github.com/macadmins/nudge/blob/main/README.md) via the [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash) script to create:**
+**Configures [Nudge](https://github.com/macadmins/nudge/blob/main/README.md) via the [Nudge Post-install](Nudge-Post-install.bash) script to create:**
 - LaunchAgent: Opens Nudge 
 - LaunchDaemon: Redirect Logs
 - Local JSON: Configures Nudge
@@ -57,18 +57,19 @@ Carefully review [Nudge Preferences](https://github.com/macadmins/nudge/wiki/Pre
 
 | Option | Nudge.app | LaunchAgent | Preference |
 |--------|-----------|-------------|------------|
-| <center>1</center> | <center><img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.1.x.pkg | | <img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Firefox%20icon.png" width="100">  <img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Terminal%20icon.png" width="100"> <br /> <center>Local Testing</center> |
-|  <center>2</center> | <center><img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.1.x.pkg | <center><img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/PKG%20icon.png" width="100"> <br /> Nudge_LaunchAgent-1.0.0.pkg </center> | <img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Jamf%20Pro%20icon.png" width="100">  <img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Configuration%20Profile%20icon.png" width="100"> <br /> <center>Jamf Pro JSON Schema</center> |
-|  <center>3</center> | <center><img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.1.x.pkg | <img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Terminal%20icon.png" width="100"> <img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/PLIST%20icon.png" width="100"> <br /> <center>Nudge Post-install script</center> | <img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Terminal%20icon.png" width="100"> <img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/JSON%20icon.png" width="100"> <br /> <center>Nudge Post-install script</center> |
+| <center>1</center> | <center><img src="images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.1.x.pkg | | <img src="images/Firefox%20icon.png" width="100">  <img src="images/Terminal%20icon.png" width="100"> <br /> <center>Local Testing</center> |
+|  <center>2</center> | <center><img src="images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.1.x.pkg | <center><img src="images/PKG%20icon.png" width="100"> <br /> Nudge_LaunchAgent-1.0.0.pkg </center> | <img src="images/Jamf%20Pro%20icon.png" width="100">  <img src="images/Configuration%20Profile%20icon.png" width="100"> <br /> <center>Jamf Pro JSON Schema</center> |
+|  <center>3</center> | <center><img src="images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.1.x.pkg | <img src="images/Terminal%20icon.png" width="100"> <img src="images/PLIST%20icon.png" width="100"> <br /> <center>Nudge Post-install script</center> | <img src="images/Terminal%20icon.png" width="100"> <img src="images/JSON%20icon.png" width="100"> <br /> <center>Nudge Post-install script</center> |
 
-1. **Option No. 1** is when you are first testing Nudge. You'll install the [latest Nudge.app](https://github.com/macadmins/nudge/releases) on a test Mac and then carefully review the following articles in your favorite Web browser and use [Terminal](https://github.com/macadmins/nudge/blob/main/README.md#command-line-arguments) to modify Nudge's configuration using its built-in [JSON support](https://github.com/macadmins/nudge#json-support):
+1. **Option No. 1** is when you are first testing Nudge. You'll install the [latest Nudge.app](https://github.com/macadmins/nudge/releases) on a test Mac and then carefully review the following articles and use your favorite editor to modify Nudge's configuration, then use Terminal to test Nudge's built-in [JSON support](https://github.com/macadmins/nudge/wiki#json-support):
 	- [Nudge README](https://github.com/macadmins/nudge/blob/main/README.md)
+	- [Nudge Wiki](https://github.com/macadmins/nudge/wiki)
 	- [Getting Started](https://github.com/macadmins/nudge/wiki/Getting-Started)
 	
 	When you're satisfied with your Nudge configuration on your local test Mac, it's time to deploy to your testing group.
-1. Every release of Nudge includes a [`LaunchAgent` package](https://github.com/macadmins/nudge/blob/main/README.md#scheduling-nudge-to-run), which we see in **Option No. 2**. This `LaunchAgent` will open Nudge every 30 minutes — on the hour and half-past the hour.  You will still need to deploy the Nudge app itself,  and with this option, a [Jamf Pro JSON Schema to deploy a Configuration Profile](https://github.com/macadmins/nudge/wiki/Jamf-Pro-Guide#configuration-profile) for Nudge's settings.
+1. Every release of Nudge includes a [`LaunchAgent` package](https://github.com/macadmins/nudge/wiki#scheduling-nudge-to-run), which we see in **Option No. 2**. This `LaunchAgent` will open Nudge every 30 minutes — on the hour and half-past the hour.  You will still need to deploy the Nudge app itself,  and with this option, a [Jamf Pro JSON Schema to deploy a Configuration Profile](https://github.com/macadmins/nudge/wiki/Jamf-Pro-Guide#configuration-profile) for Nudge's settings.
 	- If you deploy a standard Configuration Profile, **it must be signed** or it *will be* modified by Jamf Pro. (See: [Creating a Signing Certificate Using Jamf Pro's Built-in CA to Use for Signing Configuration Profiles and Packages](https://www.jamf.com/jamf-nation/articles/649/).)
-1. **Option No. 3** leverages the [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash) script deployed via the Jamf Pro Script Payload to create:
+1. **Option No. 3** leverages the [Nudge Post-install](Nudge-Post-install.bash) script deployed via the Jamf Pro Script Payload to create:
 	- LaunchAgent: Opens Nudge 
 	- LaunchDaemon: Redirect Logs
 	- Local JSON: Configures Nudge
@@ -87,7 +88,7 @@ The remainder of this article focuses on **Option No. 3**.
 - [Jamf Pro Administrator's Guide Scripts](https://docs.jamf.com/10.32.0/jamf-pro/administrator-guide/Scripts.html)
 - [Screencast](https://rumble.com/vnwtle-nudge-post-install-script.html) (02:02; no audio)
 
-Add the [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash) script to Jamf Pro:
+Add the [Nudge Post-install](Nudge-Post-install.bash) script to Jamf Pro:
 
 #### Jamf Pro Script Parameter Labels
 
@@ -108,7 +109,7 @@ Add the [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/b
 	"actionButtonPath": "jamfselfservice://content?entity=policy&id=1&action=execute",
 ```
 
-To open **System Preferences > Software Update** (i.e., Nudge v1.0.0 behavior), [delete the entire `actionButtonPath` line](https://github.com/dan-snelson/Nudge-Post-install/blob/main/Nudge-Post-install.bash#L328).
+To open **System Preferences > Software Update** (i.e., Nudge v1.0.0 behavior), [delete the entire `actionButtonPath` line](Nudge-Post-install.bash#L328).
 
 ---
 
@@ -117,7 +118,7 @@ To open **System Preferences > Software Update** (i.e., Nudge v1.0.0 behavior), 
 Nudge is updated frequently and the latest version is always available from [Nudge Releases](https://github.com/macadmins/nudge/releases).
 
 Using [Jamf Pro Package Management](https://docs.jamf.com/10.32.0/jamf-pro/administrator-guide/Package_Management.html) as a guide, upload the required Nudge .PKG:
-- Nudge-1.1.1.x.pkg
+- Nudge-1.1.2.x.pkg
 - ~~Nudge_LaunchAgent-1.0.0.pkg~~ (The required `LaunchAgent` is included in the Nudge Post-install script.) 
 
 ---
@@ -131,27 +132,27 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 | And / Or | | Criteria | Operator | Value | |
 |----------|-|----------|----------|-------|-|
 | | ( | Application Title | is | `Nudge.app` | |
-| and | | Application Version | is not | `1.1.1.09082021120759` | ) |
+| and | | Application Version | is not | `1.1.2.10182021160959` | ) |
 | or | | Application Title | does not have | `Nudge.app` | |
-| and | | Operating System Version | greater than or equal | `11.0` | |
+| and | | Operating System Version | greater than or equal | `11.0.1` | |
 
-<img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Update%20Smart%20Nudge.png" width="900">
+<img src="images/Update%20Smart%20Nudge.png" width="900">
 
 ---
 
 ## Policies
 ### Overview
 
-<img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Nudge%20Polciies.png" width="900">
+<img src="images/Nudge%20Polciies.png" width="900">
 
-#### Nudge (1.1.1.x)
+#### Nudge (1.1.2.x)
 #### Options
 - **General**
-	- Display Name: Nudge (1.1.1.x)
+	- Display Name: Nudge (1.1.2.x)
 	- Trigger: Recurring Check-in
 	- Execution Frequency: Ongoing
 - **Package**
-	- Nudge-1.1.1.x.pkg
+	- Nudge-1.1.2.x.pkg
 	- ~~Nudge_LaunchAgent-1.0.0.pkg~~ (The required `LaunchAgent` is included in the Nudge Post-install script.) 
 - **Maintenance**
 	- Update Inventory 
@@ -174,13 +175,15 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 	- Trigger: Recurring Check-in
 	- Execution Frequency: Once per computer
 - **Scripts**
-	- Nudge Post-install (0.0.4)
+	- Nudge Post-install (0.0.8)
 		- Priority: After
 		- Authorization Key: `PurpleMonkeyDishwasher`
 		- Reverse Domain Name Notation: `org.churchofjesuschrist`
-		- Required Minimum OS Version: `11.5.2`
-		- Required Installation Date & Time: `2021-08-18T23:00:00Z`
 		- Configuration Files to Reset: `All`
+		- Required macOS Big Sur Minimum OS Version: `11.6`
+		- Required macOS Big Sur Installation Date & Time: `2021-10-15T23:00:00Z`
+		- Required macOS Monterey Minimum OS Version: `12.0.1`
+		- Required macOS Monterey Installation Date & Time: `2021-12-01T23:00:00Z`
 ##### Scope
 - **Targets:** Nudge
 - **Limitations:** No Limitations
@@ -189,7 +192,7 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 	- Testing: Beta Group
 	- Testing: Gamma Group
 
-<img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Nudge%20Configuration%20General%20Workforce.png" width="900">
+<img src="images/Nudge%20Configuration%20General%20Workforce.png" width="900">
 
 <hr width="33%">
 
@@ -230,7 +233,7 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 ### Reference Images
 
 Nudge's `userInterface : updateElements` Field Names (before deadline)
-<img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Field%20Names.png" width="900">
+<img src="images/Field%20Names.png" width="900">
 
 Nudge's `userInterface : updateElements` Field Names (deferral options disabled after deadline)
-<img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Field%20Names%20(deadline%20past).png" width="900">
+<img src="images/Field%20Names%20(deadline%20past).png" width="900">
