@@ -92,13 +92,13 @@ Add the [Nudge Post-install](Nudge-Post-install.bash) script to Jamf Pro:
 
 #### Jamf Pro Script Parameter Labels
 
-- Parameter 4: Authorization Key
-- Parameter 5: Reverse Domain Name Notation (i.e., `org.churchofjesuschrist`)
-- Parameter 6: Configuration Files to Reset (i.e., `None (blank) | All | JSON | LaunchAgent | LaunchDaemon`)
-- Parameter 7: Required macOS Big Sur Minimum OS Version (i.e., 11.6)
-- Parameter 8: Required macOS Big Sur Installation Date & Time (i.e., 2021-10-01T23:00:00Z)
-- Parameter 9: Required macOS Monterey Minimum OS Version (i.e., 12.0.1)
-- Parameter 10: Required macOS Monterey Installation Date & Time (i.e., 2021-11-12T23:00:00Z)
+- **Parameter 4:** Authorization Key
+- **Parameter 5:** Reverse Domain Name Notation (i.e., `org.churchofjesuschrist`)
+- **Parameter 6:** Configuration Files to Reset (i.e., `None (blank) | All | JSON | LaunchAgent | LaunchDaemon`)
+- **Parameter 7:** Required macOS Big Sur Minimum OS Version (i.e., `11.6`)
+- **Parameter 8:** Required macOS Big Sur Installation Date & Time (i.e., `2021-10-01T23:00:00Z`)
+- **Parameter 9:** Required macOS Monterey Minimum OS Version (i.e., `12.0.1`)
+- **Parameter 10:** Required macOS Monterey Installation Date & Time (i.e., `2021-11-12T23:00:00Z`)
 
 <img src="images/Nudge%20Post-install%20Script%20Parameter%20Labels.png" width="900">
 
