@@ -99,7 +99,7 @@ Add the [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/b
 - Parameter 9: Required macOS Monterey Minimum OS Version (i.e., 12.0.1)
 - Parameter 10: Required macOS Monterey Installation Date & Time (i.e., 2021-11-12T23:00:00Z)
 
-<img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Nudge%20Post-install%20Jamf%20Pro%20Script%20Parameter%20Labels.png" width="900">
+<img src="images/Nudge%20Post-install%20Script%20Parameter%20Labels.png" width="900">
 
 **Note:** Beginning with **Nudge 1.1.0**, Mac Admins can leverage `userInterface : actionButtonPath` to execute a [Jamf Pro policy](https://docs.jamf.com/10.32.0/jamf-pro/administrator-guide/Jamf_Self_Service_for_macOS_URL_Schemes.html).
 
@@ -200,21 +200,22 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 	- Trigger: Recurring Check-in
 	- Execution Frequency: Once per computer
 - **Scripts**
-	- Nudge Post-install (0.0.4)
+	- Nudge Post-install (0.0.8)
 		- Priority: After
 		- Authorization Key: `PurpleMonkeyDishwasher`
 		- Reverse Domain Name Notation: `org.churchofjesuschrist`
-		- Required Minimum OS Version: `11.4`
-		- Required Installation Date & Time: `2021-05-20T23:00:00Z`
-		- Configuration Files to Reset: `JSON`
+		- Configuration Files to Reset: `All`
+		- Required macOS Big Sur Minimum OS Version: `11.6`
+		- Required macOS Big Sur Installation Date & Time: `2021-10-01T23:00:00Z`
+		- Required macOS Monterey Minimum OS Version: `12.0.1`
+		- Required macOS Monterey Installation Date & Time: `2021-11-12T23:00:00Z`
 ##### Scope
 - **Targets:** Nudge
 - **Limitations:** No Limitations
 - **Exclusions:**
 	- Testing: None
 
-<img src="https://raw.githubusercontent.com/dan-snelson/Nudge-Post-install/main/images/Nudge%20Configuration%20Opt-in%20Beta%20Testers%20JSON.png" width="900">
-
+<img src="images/Nudge%20Configuration%20for%20Opt-in%20Beta%20Testers.png" width="900">
 
 
 ---
