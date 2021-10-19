@@ -68,6 +68,13 @@ jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
 launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
 
+# Set deadline variable based on OS version
+osProductVersion=$( /usr/bin/sw_vers -productVersion )
+case "${osProductVersion}" in
+	11*	) deadline="${requiredBigSurInstallationDate}"		;;
+	12* ) deadline="${requiredMontereyInstallationDate}"	;;
+esac
+
 
 
 ####################################################################################################
@@ -362,7 +369,7 @@ if [[ ! -f ${jsonPath} ]]; then
 			"mainContentHeader": "mainContentHeader",
 			"mainContentNote": "mainContentNote",
 			"mainContentSubHeader": "mainContentSubHeader",
-			"mainContentText": "mainContentText \n\nTo perform the update now, click \"actionButtonText,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"primaryQuitButtonText\" (which will no longer be visible once the ${requiredInstallationDate} deadline has passed).",
+			"mainContentText": "mainContentText \n\nTo perform the update now, click \"actionButtonText,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"primaryQuitButtonText\" (which will no longer be visible once the ${deadline} deadline has passed).",
 			"mainHeader": "mainHeader",
 			"oneDayDeferralButtonText": "oneDayDeferralButtonText",
 			"oneHourDeferralButtonText": "oneHourDeferralButtonText",
