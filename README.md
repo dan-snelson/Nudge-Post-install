@@ -57,9 +57,9 @@ Carefully review [Nudge Preferences](https://github.com/macadmins/nudge/wiki/Pre
 
 | Option | Nudge.app | LaunchAgent | Preference |
 |--------|-----------|-------------|------------|
-| <center>1</center> | <center><img src="images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.1.x.pkg | | <img src="images/Firefox%20icon.png" width="100">  <img src="images/Terminal%20icon.png" width="100"> <br /> <center>Local Testing</center> |
-|  <center>2</center> | <center><img src="images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.1.x.pkg | <center><img src="images/PKG%20icon.png" width="100"> <br /> Nudge_LaunchAgent-1.0.0.pkg </center> | <img src="images/Jamf%20Pro%20icon.png" width="100">  <img src="images/Configuration%20Profile%20icon.png" width="100"> <br /> <center>Jamf Pro JSON Schema</center> |
-|  <center>3</center> | <center><img src="images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.1.x.pkg | <img src="images/Terminal%20icon.png" width="100"> <img src="images/PLIST%20icon.png" width="100"> <br /> <center>Nudge Post-install script</center> | <img src="images/Terminal%20icon.png" width="100"> <img src="images/JSON%20icon.png" width="100"> <br /> <center>Nudge Post-install script</center> |
+| <center>1</center> | <center><img src="images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.2.x.pkg | | <img src="images/Firefox%20icon.png" width="100">  <img src="images/Terminal%20icon.png" width="100"> <br /> <center>Local Testing</center> |
+|  <center>2</center> | <center><img src="images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.2.x.pkg | <center><img src="images/PKG%20icon.png" width="100"> <br /> Nudge_LaunchAgent-1.0.0.pkg </center> | <img src="images/Jamf%20Pro%20icon.png" width="100">  <img src="images/Configuration%20Profile%20icon.png" width="100"> <br /> <center>Jamf Pro JSON Schema</center> |
+|  <center>3</center> | <center><img src="images/PKG%20icon.png" width="100"></center> <br /> Nudge-1.1.2.x.pkg | <img src="images/Terminal%20icon.png" width="100"> <img src="images/PLIST%20icon.png" width="100"> <br /> <center>Nudge Post-install script</center> | <img src="images/Terminal%20icon.png" width="100"> <img src="images/JSON%20icon.png" width="100"> <br /> <center>Nudge Post-install script</center> |
 
 1. **Option No. 1** is when you are first testing Nudge. You'll install the [latest Nudge.app](https://github.com/macadmins/nudge/releases) on a test Mac and then carefully review the following articles and use your favorite editor to modify Nudge's configuration, then use Terminal to test Nudge's built-in [JSON support](https://github.com/macadmins/nudge/wiki#json-support):
 	- [Nudge README](https://github.com/macadmins/nudge/blob/main/README.md)
@@ -109,7 +109,7 @@ Add the [Nudge Post-install](Nudge-Post-install.bash) script to Jamf Pro:
 	"actionButtonPath": "jamfselfservice://content?entity=policy&id=1&action=execute",
 ```
 
-To open **System Preferences > Software Update** (i.e., Nudge v1.0.0 behavior), [delete the entire `actionButtonPath` line](Nudge-Post-install.bash#L328).
+To open **System Preferences > Software Update** (i.e., Nudge v1.0.0 behavior), [delete the entire `actionButtonPath` line](Nudge-Post-install.bash#L352).
 
 ---
 
