@@ -9,4 +9,4 @@
 
 ---
 
-Please see the [Wiki](https://github.com/dan-snelson/Nudge-Post-install/wiki) to configure the Nudge Post-install script.
+**Please see the [Wiki](https://github.com/dan-snelson/Nudge-Post-install/wiki) to configure the Nudge Post-install script.**
