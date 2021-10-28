@@ -95,8 +95,8 @@ Add the [Nudge Post-install](Nudge-Post-install.bash) script to Jamf Pro:
 - **Parameter 4:** Authorization Key
 - **Parameter 5:** Reverse Domain Name Notation (i.e., `org.churchofjesuschrist`)
 - **Parameter 6:** Configuration Files to Reset (i.e., `None (blank) | All | JSON | LaunchAgent | LaunchDaemon`)
-- **Parameter 7:** Required macOS Big Sur Minimum OS Version (i.e., `11.6`)
-- **Parameter 8:** Required macOS Big Sur Installation Date & Time (i.e., `2021-10-01T23:00:00Z`)
+- **Parameter 7:** Required macOS Big Sur Minimum OS Version (i.e., `11.6.1`)
+- **Parameter 8:** Required macOS Big Sur Installation Date & Time (i.e., `2021-11-01T23:00:00Z`)
 - **Parameter 9:** Required macOS Monterey Minimum OS Version (i.e., `12.0.1`)
 - **Parameter 10:** Required macOS Monterey Installation Date & Time (i.e., `2021-11-12T23:00:00Z`)
 
@@ -180,8 +180,8 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 		- Authorization Key: `PurpleMonkeyDishwasher`
 		- Reverse Domain Name Notation: `org.churchofjesuschrist`
 		- Configuration Files to Reset: `All`
-		- Required macOS Big Sur Minimum OS Version: `11.6`
-		- Required macOS Big Sur Installation Date & Time: `2021-10-15T23:00:00Z`
+		- Required macOS Big Sur Minimum OS Version: `11.6.1`
+		- Required macOS Big Sur Installation Date & Time: `2021-11-01T23:00:00Z`
 		- Required macOS Monterey Minimum OS Version: `12.0.1`
 		- Required macOS Monterey Installation Date & Time: `2021-12-01T23:00:00Z`
 ##### Scope
@@ -208,8 +208,8 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 		- Authorization Key: `PurpleMonkeyDishwasher`
 		- Reverse Domain Name Notation: `org.churchofjesuschrist`
 		- Configuration Files to Reset: `All`
-		- Required macOS Big Sur Minimum OS Version: `11.6`
-		- Required macOS Big Sur Installation Date & Time: `2021-10-01T23:00:00Z`
+		- Required macOS Big Sur Minimum OS Version: `11.6.1`
+		- Required macOS Big Sur Installation Date & Time: `2021-11-01T23:00:00Z`
 		- Required macOS Monterey Minimum OS Version: `12.0.1`
 		- Required macOS Monterey Installation Date & Time: `2021-11-12T23:00:00Z`
 ##### Scope
@@ -225,8 +225,12 @@ Using the Jamf Pro Administrator's Guide [Smart Groups](https://docs.jamf.com/10
 
 ## General Resources
 
-- [Feature Requests & Technical Issues](https://github.com/macadmins/nudge/issues)
-- [MacAdmin's Slack](https://www.macadmins.org) #nudge
+- Feature Requests & Technical Issues
+  - [Nudge](https://github.com/macadmins/nudge/issues)
+  - [Nudge Post-install](https://github.com/dan-snelson/Nudge-Post-install/issues)
+- [MacAdmin's Slack](https://www.macadmins.org)
+  - #nudge
+  - #nudge-post-install
 - [Creating Launch Daemons and Agents](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html)
   - [Timed Jobs Using launchd](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/ScheduledJobs.html#//apple_ref/doc/uid/10000172i-CH1-SW1)
 
