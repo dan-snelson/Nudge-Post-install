@@ -132,21 +132,21 @@ function resetConfiguration() {
 
 			# Reset JSON
 			echo "Remove ${jsonPath} …"
-			/bin/rm -fv ${jsonPath}
+			/bin/rm -fv "${jsonPath}"
 			scriptResult+="Removed ${jsonPath}; "
 
 			# Reset LaunchAgent
 			echo "Unload ${launchAgentPath} …"
 			/bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
 			echo "Remove ${launchAgentPath} …"
-			/bin/rm -fv ${launchAgentPath}
+			/bin/rm -fv "${launchAgentPath}"
 			scriptResult+="Removed ${launchAgentPath}; "
 
 			# Reset LaunchDaemon
 			echo "Unload ${launchDaemonPath} …"
 			/bin/launchctl unload -w "${launchDaemonPath}"
 			echo "Remove ${launchDaemonPath} …"
-			/bin/rm -fv ${launchDaemonPath}
+			/bin/rm -fv "${launchDaemonPath}"
 			scriptResult+="Removed ${launchDaemonPath}; "
 
 			# Hide Nudge in Finder
@@ -159,7 +159,7 @@ function resetConfiguration() {
 			if [[ -z "$loggedInUser" ]]; then
 				scriptResult+="Did not detect logged-in user"
 			else
-				/usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders \( -name com.apple.dock.launchpad -a -user ${loggedInUser} \) 2> /dev/null)/db/db "DELETE FROM apps WHERE title='Nudge';"
+				/usr/bin/sqlite3 $(/usr/bin/sudo find /private/var/folders \( -name com.apple.dock.launchpad -a -user "${loggedInUser}" \) 2> /dev/null)/db/db "DELETE FROM apps WHERE title='Nudge';"
 				/usr/bin/killall Dock
 				scriptResult+="Hid Nudge in Launchpad for ${loggedInUser}; "
 			fi
@@ -170,7 +170,7 @@ function resetConfiguration() {
 		"JSON" )
 			# Reset JSON
 			echo "Remove ${jsonPath} …"
-			/bin/rm -fv ${jsonPath}
+			/bin/rm -fv "${jsonPath}"
 			scriptResult+="Removed ${jsonPath}; "
 			;;
 
@@ -179,7 +179,7 @@ function resetConfiguration() {
 			echo "Unload ${launchAgentPath} …"
 			/bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
 			echo "Remove ${launchAgentPath} …"
-			/bin/rm -fv ${launchAgentPath}
+			/bin/rm -fv "${launchAgentPath}"
 			scriptResult+="Removed ${launchAgentPath}; "
 			;;
 
@@ -188,7 +188,7 @@ function resetConfiguration() {
 			echo "Unload ${launchDaemonPath} …"
 			/bin/launchctl unload -w "${launchDaemonPath}"
 			echo "Remove ${launchDaemonPath} …"
-			/bin/rm -fv ${launchDaemonPath}
+			/bin/rm -fv "${launchDaemonPath}"
 			scriptResult+="Removed ${launchDaemonPath}; "
 			;;
 
@@ -247,7 +247,7 @@ if [[ ! -f ${launchDaemonPath} ]]; then
 
 	echo "Create ${launchDaemonPath} …"
 
-	cat <<EOF > ${launchDaemonPath}
+	cat <<EOF > "${launchDaemonPath}"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -291,12 +291,12 @@ fi
 if [[ ! -f ${jsonPath} ]]; then
 
 	echo "Create ${jsonPath} …"
-	/usr/bin/touch ${jsonPath}
+	/usr/bin/touch "${jsonPath}"
 	scriptResult+="Created ${jsonPath}; "
 
 	echo "Write ${jsonPath} …"
 
-	cat <<EOF > ${jsonPath}
+	cat <<EOF > "${jsonPath}"
 {
 	"optionalFeatures": {
 		"acceptableApplicationBundleIDs": [
@@ -401,7 +401,7 @@ if [[ ! -f ${launchAgentPath} ]]; then
 
 	echo "Create ${launchAgentPath} …"
 
-	cat <<EOF > ${launchAgentPath}
+	cat <<EOF > "${launchAgentPath}"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -416,7 +416,7 @@ if [[ ! -f ${launchAgentPath} ]]; then
 	<array>
 		<string>/Applications/Utilities/Nudge.app/Contents/MacOS/Nudge</string>
 		<string>-json-url</string>
-		<string>file:///${jsonPath}</string>
+		<string>file://${jsonPath}</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
@@ -438,9 +438,9 @@ EOF
 	scriptResult+="Created ${launchAgentPath}; "
 
 	echo "Set ${launchAgentPath} file permissions ..."
-	/usr/sbin/chown root:wheel ${launchAgentPath}
-	/bin/chmod 644 ${launchAgentPath}
-	/bin/chmod +x ${launchAgentPath}
+	/usr/sbin/chown root:wheel "${launchAgentPath}"
+	/bin/chmod 644 "${launchAgentPath}"
+	/bin/chmod +x "${launchAgentPath}"
 	scriptResult+="Set ${launchAgentPath} file permissions; "
 
 else
