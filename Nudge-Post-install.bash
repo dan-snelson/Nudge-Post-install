@@ -43,6 +43,10 @@
 #		Enforce latest version on both macOS Monterey and macOS Big Sur
 #		See: https://github.com/macadmins/nudge/wiki/targetedOSVersionsRule#real-world-example-2
 #
+#	Version 0.0.9, 21-Jan-2022, Dan K. Snelson (@dan-snelson)
+#		Updates for "asynchronousSoftwareUpdate"
+#		See: https://github.com/macadmins/nudge/issues/294
+#
 ####################################################################################################
 
 
@@ -53,17 +57,17 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.8"
+scriptVersion="0.0.9"
 scriptResult=""
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
 authorizationKey="${4}"				# Authorization Key to prevent unauthorized execution via Jamf Remote
 plistDomain="${5}"				# Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
 resetConfiguration="${6}"			# Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
-requiredBigSurMinimumOSVersion="${7}"		# Required macOS Big Sur Minimum Version (i.e., 11.6)
-requiredBigSurInstallationDate="${8}"		# Required macOS Big SurInstallation Date & Time (i.e., 2021-10-01T10:00:00Z)
-requiredMontereyMinimumOSVersion="${9}"		# Required macOS Monterey Minimum Version (i.e., 12.0.1)
-requiredMontereyInstallationDate="${10}"	# Required macOS Monterey Installation Date & Time (i.e., 2021-11-12T10:00:00Z)
+requiredBigSurMinimumOSVersion="${7}"		# Required macOS Big Sur Minimum Version (i.e., 11.6.3)
+requiredBigSurInstallationDate="${8}"		# Required macOS Big SurInstallation Date & Time (i.e., 2022-02-15T10:00:00Z)
+requiredMontereyMinimumOSVersion="${9}"		# Required macOS Monterey Minimum Version (i.e., 12.2)
+requiredMontereyInstallationDate="${10}"	# Required macOS Monterey Installation Date & Time (i.e., 2022-02-15T10:00:00Z)
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
 launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
@@ -303,7 +307,7 @@ if [[ ! -f ${jsonPath} ]]; then
 			"us.zoom.xos"
 		],
 		"aggressiveUserExperience": true,
-		"asyncronousSoftwareUpdate": true,
+		"asynchronousSoftwareUpdate": true,
 		"attemptToFetchMajorUpgrade": true,
 		"enforceMinorUpdates": true
 	},
