@@ -47,6 +47,10 @@
 #		Updates for "asynchronousSoftwareUpdate"
 #		See: https://github.com/macadmins/nudge/issues/294
 #
+#	Version 0.0.10, 10-Feb-2022, Dan K. Snelson (@dan-snelson)
+#		Updates for "disableSoftwareUpdateWorkflow"
+#		See: https://github.com/macadmins/nudge/issues/302
+
 ####################################################################################################
 
 
@@ -309,6 +313,7 @@ if [[ ! -f ${jsonPath} ]]; then
 		"aggressiveUserExperience": true,
 		"asynchronousSoftwareUpdate": true,
 		"attemptToFetchMajorUpgrade": true,
+		"disableSoftwareUpdateWorkflow": false,
 		"enforceMinorUpdates": true
 	},
 	"osVersionRequirements": [
