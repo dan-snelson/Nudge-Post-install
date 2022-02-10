@@ -50,7 +50,7 @@
 #	Version 0.0.10, 10-Feb-2022, Dan K. Snelson (@dan-snelson)
 #		Updates for "disableSoftwareUpdateWorkflow"
 #		See: https://github.com/macadmins/nudge/issues/302
-
+#
 ####################################################################################################
 
 
@@ -61,7 +61,7 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.9"
+scriptVersion="0.0.10"
 scriptResult=""
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
