@@ -311,6 +311,7 @@ if [[ ! -f ${jsonPath} ]]; then
 			"us.zoom.xos"
 		],
 		"aggressiveUserExperience": true,
+		"asynchronousSoftwareUpdate": true,
 		"attemptToFetchMajorUpgrade": true,
 		"disableSoftwareUpdateWorkflow": false,
 		"enforceMinorUpdates": true
