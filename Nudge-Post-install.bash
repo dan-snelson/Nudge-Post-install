@@ -51,6 +51,10 @@
 #		Updates for "disableSoftwareUpdateWorkflow"
 #		See: https://github.com/macadmins/nudge/issues/302
 #
+#	Version 0.0.11, 15-Mar-2022, Dan K. Snelson (@dan-snelson)
+#		Updates for Grace Periods for newly provisioned machines
+#		See: https://github.com/macadmins/nudge/commit/67088d0648bc038c71dc80aba85d1ec193f87534
+#
 ####################################################################################################
 
 
@@ -61,17 +65,17 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.10"
+scriptVersion="0.0.11"
 scriptResult=""
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
 authorizationKey="${4}"				# Authorization Key to prevent unauthorized execution via Jamf Remote
 plistDomain="${5}"				# Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
 resetConfiguration="${6}"			# Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
-requiredBigSurMinimumOSVersion="${7}"		# Required macOS Big Sur Minimum Version (i.e., 11.6.3)
-requiredBigSurInstallationDate="${8}"		# Required macOS Big SurInstallation Date & Time (i.e., 2022-02-15T10:00:00Z)
-requiredMontereyMinimumOSVersion="${9}"		# Required macOS Monterey Minimum Version (i.e., 12.2)
-requiredMontereyInstallationDate="${10}"	# Required macOS Monterey Installation Date & Time (i.e., 2022-02-15T10:00:00Z)
+requiredBigSurMinimumOSVersion="${7}"		# Required macOS Big Sur Minimum Version (i.e., 11.6.5)
+requiredBigSurInstallationDate="${8}"		# Required macOS Big SurInstallation Date & Time (i.e., 2022-03-21T10:00:00Z)
+requiredMontereyMinimumOSVersion="${9}"		# Required macOS Monterey Minimum Version (i.e., 12.3)
+requiredMontereyInstallationDate="${10}"	# Required macOS Monterey Installation Date & Time (i.e., 2022-03-21T10:00:00Z)
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
 launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
@@ -343,12 +347,16 @@ if [[ ! -f ${jsonPath} ]]; then
 		}
 	],
 	"userExperience": {
+		"allowGracePeriods": false,
 		"allowUserQuitDeferrals": true,
 		"allowedDeferrals": 1000000,
 		"allowedDeferralsUntilForcedSecondaryQuitButton": 14,
 		"approachingRefreshCycle": 6000,
 		"approachingWindowTime": 72,
 		"elapsedRefreshCycle": 300,
+		"gracePeriodInstallDelay": 23,
+		"gracePeriodLaunchDelay": 1,
+		"gracePeriodPath": "/private/var/db/.AppleSetupDone",
 		"imminentRefreshCycle": 600,
 		"imminentWindowTime": 24,
 		"initialRefreshCycle": 18000,
