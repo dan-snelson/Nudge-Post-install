@@ -56,7 +56,7 @@
 #        See: https://github.com/macadmins/nudge/commit/67088d0648bc038c71dc80aba85d1ec193f87534
 #
 #   Version 0.0.12, 16-May-2022, Dan K. Snelson (@dan-snelson)
-#       Updates for Nudge 1.1.6.81352
+#       Updates for Nudge 1.1.6.81354
 #
 ####################################################################################################
 
