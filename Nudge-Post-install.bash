@@ -58,6 +58,9 @@
 #   Version 0.0.12, 16-May-2022, Dan K. Snelson (@dan-snelson)
 #       Updates for Nudge 1.1.6.81354
 #
+#   Version 0.0.13, 18-May-2022, Dan K. Snelson (@dan-snelson)
+#       Updates for Nudge 1.1.7.81362
+#
 ####################################################################################################
 
 
@@ -68,7 +71,7 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.12"
+scriptVersion="0.0.13"
 scriptResult="Version ${scriptVersion};"
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
@@ -318,6 +321,11 @@ if [[ ! -f ${jsonPath} ]]; then
         "aggressiveUserFullScreenExperience": true,
         "asynchronousSoftwareUpdate": true,
         "attemptToFetchMajorUpgrade": true,
+        "attemptToBlockApplicationLaunches": true,
+        "blockedApplicationBundleIDs": [
+            "com.apple.ColorSyncUtility",
+            "com.apple.DigitalColorMeter"
+            ],
         "disableSoftwareUpdateWorkflow": false,
         "enforceMinorUpdates": true
     },
