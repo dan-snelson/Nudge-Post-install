@@ -59,7 +59,7 @@
 #       Updates for Nudge 1.1.6.81354
 #
 #   Version 0.0.13, 18-May-2022, Dan K. Snelson (@dan-snelson)
-#       Updates for Nudge 1.1.7.81362
+#       Updates for Nudge 1.1.7.81373
 #
 ####################################################################################################
 
@@ -313,10 +313,11 @@ if [[ ! -f ${jsonPath} ]]; then
     cat <<EOF > "${jsonPath}"
 {
     "optionalFeatures": {
-        "acceptableCameraUsage": false,
         "acceptableApplicationBundleIDs": [
             "us.zoom.xos"
         ],
+        "acceptableCameraUsage": false,
+        "acceptableScreenSharingUsage": false,
         "aggressiveUserExperience": true,
         "aggressiveUserFullScreenExperience": true,
         "asynchronousSoftwareUpdate": true,
@@ -362,7 +363,6 @@ if [[ ! -f ${jsonPath} ]]; then
         "allowedDeferralsUntilForcedSecondaryQuitButton": 14,
         "approachingRefreshCycle": 6000,
         "approachingWindowTime": 72,
-        "cameraReferralTime": 0,
         "elapsedRefreshCycle": 300,
         "gracePeriodInstallDelay": 23,
         "gracePeriodLaunchDelay": 1,
@@ -370,6 +370,7 @@ if [[ ! -f ${jsonPath} ]]; then
         "imminentRefreshCycle": 600,
         "imminentWindowTime": 24,
         "initialRefreshCycle": 18000,
+        "logReferralTime": 0,
         "maxRandomDelayInSeconds": 1200,
         "noTimers": false,
         "nudgeRefreshCycle": 60,
