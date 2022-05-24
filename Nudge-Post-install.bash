@@ -9,55 +9,6 @@
 #
 ####################################################################################################
 #
-# HISTORY
-#
-#     Version 0.0.1, 19-Mar-2021, Dan K. Snelson (@dan-snelson)
-#        Original version
-#
-#    Version 0.0.2, 20-Mar-2021, Dan K. Snelson (@dan-snelson)
-#        Leveraged additional Script Parameters
-#        Added "Reset" function
-#
-#    Version 0.0.3, 29-Apr-2021, Dan K. Snelson (@dan-snelson)
-#        Updated for macOS Big Sur 11.3
-#        Fix imminentRefreshCycle typo
-#
-#    Version 0.0.4, 27-May-2021, Dan K. Snelson (@dan-snelson)
-#        Updated for macOS Big Sur 11.4
-#        Moved the "Hide Nudge in Finder & Launchpad" code into the "Reset > All" section
-#        Changed "userInterface" values to field names (to hopefully more easily identify in the UI)
-#
-#    Version 0.0.5, 02-Jul-2021, Dan K. Snelson (@dan-snelson)
-#        Updated for macOS Big Sur 11.5
-#        Corrected Hiding Nudge in Launchpad for macOS Monterey
-#
-#    Version 0.0.6, 18-Aug-2021, Dan K. Snelson (@dan-snelson)
-#        Updated for Nudge 1.1.0
-#
-#    Version 0.0.7, 12-Oct-2021, Dan K. Snelson (@dan-snelson)
-#        Added check for logged-in user before attempting to hide Nudge in Launchpad. (Thanks for the feedback and testing, @Jotai)
-#        Compared "Nudge JSON client-side" code to "Nudge / Example Assets / com.github.macadmins.Nudge.json"
-#        https://github.com/macadmins/nudge/blob/main/Example%20Assets/com.github.macadmins.Nudge.json
-#
-#    Version 0.0.8, 19-Oct-2021, Dan K. Snelson (@dan-snelson)
-#        Enforce latest version on both macOS Monterey and macOS Big Sur
-#        See: https://github.com/macadmins/nudge/wiki/targetedOSVersionsRule#real-world-example-2
-#
-#    Version 0.0.9, 21-Jan-2022, Dan K. Snelson (@dan-snelson)
-#        Updates for "asynchronousSoftwareUpdate"
-#        See: https://github.com/macadmins/nudge/issues/294
-#
-#    Version 0.0.10, 10-Feb-2022, Dan K. Snelson (@dan-snelson)
-#        Updates for "disableSoftwareUpdateWorkflow"
-#        See: https://github.com/macadmins/nudge/issues/302
-#
-#    Version 0.0.11, 15-Mar-2022, Dan K. Snelson (@dan-snelson)
-#        Updates for Grace Periods for newly provisioned machines
-#        See: https://github.com/macadmins/nudge/commit/67088d0648bc038c71dc80aba85d1ec193f87534
-#
-#   Version 0.0.12, 16-May-2022, Dan K. Snelson (@dan-snelson)
-#       Updates for Nudge 1.1.6.81354
-#
 #   Version 0.0.13, 18-May-2022, Dan K. Snelson (@dan-snelson)
 #       Updates for Nudge 1.1.7.81373
 #
