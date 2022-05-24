@@ -2,7 +2,9 @@
 
 ## 0.0.13
 ### 18-May-2022
-- Updates for Nudge 1.1.7.81373
+- Updates for Nudge 1.1.7.81380
+    - `acceptableAssertionUsage`
+    - `acceptableAssertionApplicationNames`
     - `acceptableCameraUsage`
     - `acceptableScreenSharingUsage`
     - `logReferralTime`

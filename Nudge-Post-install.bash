@@ -10,7 +10,7 @@
 ####################################################################################################
 #
 #   Version 0.0.13, 18-May-2022, Dan K. Snelson (@dan-snelson)
-#       Updates for Nudge 1.1.7.81373
+#       Updates for Nudge 1.1.7.81380
 #
 ####################################################################################################
 
@@ -265,7 +265,13 @@ if [[ ! -f ${jsonPath} ]]; then
 {
     "optionalFeatures": {
         "acceptableApplicationBundleIDs": [
-            "us.zoom.xos"
+            "us.zoom.xos",
+            "com.cisco.webexmeetingsapp"
+        ],
+        "acceptableAssertionUsage": true,
+        "acceptableAssertionApplicationNames": [
+            "zoom.us",
+            "Meeting Center"
         ],
         "acceptableCameraUsage": false,
         "acceptableScreenSharingUsage": false,
