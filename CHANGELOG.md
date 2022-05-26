@@ -1,8 +1,8 @@
 # CHANGELOG
 
 ## 0.0.13
-### 18-May-2022
-- Updates for Nudge 1.1.7.81380
+### 25-May-2022
+- Updates for Nudge 1.1.7.81388
     - `acceptableAssertionUsage`
     - `acceptableAssertionApplicationNames`
     - `acceptableCameraUsage`
@@ -10,6 +10,7 @@
     - `logReferralTime`
     - `attemptToBlockApplicationLaunches`
     - `blockedApplicationBundleIDs`
+    - remove `logReferralTime`
 
 ## 0.0.12
 ### 16-May-2022

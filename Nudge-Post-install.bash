@@ -9,8 +9,8 @@
 #
 ####################################################################################################
 #
-#   Version 0.0.13, 18-May-2022, Dan K. Snelson (@dan-snelson)
-#       Updates for Nudge 1.1.7.81380
+#   Version 0.0.13, 25-May-2022, Dan K. Snelson (@dan-snelson)
+#       Updates for Nudge 1.1.7.81388
 #
 ####################################################################################################
 
@@ -273,8 +273,8 @@ if [[ ! -f ${jsonPath} ]]; then
             "zoom.us",
             "Meeting Center"
         ],
-        "acceptableCameraUsage": false,
-        "acceptableScreenSharingUsage": false,
+        "acceptableCameraUsage": true,
+        "acceptableScreenSharingUsage": true,
         "aggressiveUserExperience": true,
         "aggressiveUserFullScreenExperience": true,
         "asynchronousSoftwareUpdate": true,
@@ -327,7 +327,6 @@ if [[ ! -f ${jsonPath} ]]; then
         "imminentRefreshCycle": 600,
         "imminentWindowTime": 24,
         "initialRefreshCycle": 18000,
-        "logReferralTime": 0,
         "maxRandomDelayInSeconds": 1200,
         "noTimers": false,
         "nudgeRefreshCycle": 60,
