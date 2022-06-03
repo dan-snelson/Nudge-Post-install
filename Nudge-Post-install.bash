@@ -9,8 +9,8 @@
 #
 ####################################################################################################
 #
-#   Version 0.0.13, 25-May-2022, Dan K. Snelson (@dan-snelson)
-#       Updates for Nudge 1.1.7.81388
+#   Version 0.0.14, 03-Jun-2022, Dan K. Snelson (@dan-snelson)
+#       Updates for Nudge 1.1.7.81411
 #
 ####################################################################################################
 
@@ -22,7 +22,7 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.13"
+scriptVersion="0.0.14"
 scriptResult="Version ${scriptVersion};"
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
@@ -268,13 +268,13 @@ if [[ ! -f ${jsonPath} ]]; then
             "us.zoom.xos",
             "com.cisco.webexmeetingsapp"
         ],
-        "acceptableAssertionUsage": true,
+        "acceptableAssertionUsage": false,
         "acceptableAssertionApplicationNames": [
             "zoom.us",
             "Meeting Center"
         ],
-        "acceptableCameraUsage": true,
-        "acceptableScreenSharingUsage": true,
+        "acceptableCameraUsage": false,
+        "acceptableScreenSharingUsage": false,
         "aggressiveUserExperience": true,
         "aggressiveUserFullScreenExperience": true,
         "asynchronousSoftwareUpdate": true,
@@ -285,7 +285,8 @@ if [[ ! -f ${jsonPath} ]]; then
             "com.apple.DigitalColorMeter"
             ],
         "disableSoftwareUpdateWorkflow": false,
-        "enforceMinorUpdates": true
+        "enforceMinorUpdates": true,
+        "terminateApplicationsOnLaunch": true
     },
     "osVersionRequirements": [
         {
@@ -349,6 +350,7 @@ if [[ ! -f ${jsonPath} ]]; then
             "_language": "en",
             "actionButtonText": "actionButtonText",
             "customDeferralButtonText": "customDeferralButtonText",
+            "customDeferralDropdownText": "customDeferralDropdownText",
             "informationButtonText": "informationButtonText",
             "mainContentHeader": "mainContentHeader",
             "mainContentNote": "mainContentNote",

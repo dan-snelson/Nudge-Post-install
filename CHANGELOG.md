@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.0.14
+
+### 03-Jun-2022
+- Updates for Nudge 1.1.7.81411
+    - `terminateApplicationsOnLaunch`
+    - `customDeferralDropdownText`
 ## 0.0.13
 ### 25-May-2022
 - Updates for Nudge 1.1.7.81388
