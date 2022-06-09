@@ -25,7 +25,7 @@
 ####################################################################################################
 
 scriptVersion="0.0.15"
-scriptResult="Version ${scriptVersion}; "
+scriptResult=""
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
 authorizationKey="${4}"                     # Authorization Key to prevent unauthorized execution via Jamf Remote
