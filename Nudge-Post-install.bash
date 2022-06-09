@@ -97,27 +97,27 @@ function resetConfiguration() {
             # * https://github.com/macadmins/nudge/wiki/User-Deferrals#testing-and-resetting-nudge
 
             # echo "Reset User Preferences"
-            # /bin/rm -fv /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
+            # /bin/rm -f /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
             # /usr/bin/pkill -l -U "${loggedInUser}" cfprefsd
             # scriptResult+="Removed User Preferences; "
 
             # Reset JSON
             scriptResult+="Remove ${jsonPath} … "
-            /bin/rm -fv "${jsonPath}"
+            /bin/rm -f "${jsonPath}"
             scriptResult+="Removed ${jsonPath}; "
 
             # Reset LaunchAgent
             scriptResult+="Unload ${launchAgentPath} … "
             /bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
             scriptResult+="Remove ${launchAgentPath} … "
-            /bin/rm -fv "${launchAgentPath}"
+            /bin/rm -f "${launchAgentPath}"
             scriptResult+="Removed ${launchAgentPath}; "
 
             # Reset LaunchDaemon
             scriptResult+="Unload ${launchDaemonPath} … "
             /bin/launchctl unload -w "${launchDaemonPath}"
             scriptResult+="Remove ${launchDaemonPath} … "
-            /bin/rm -fv "${launchDaemonPath}"
+            /bin/rm -f "${launchDaemonPath}"
             scriptResult+="Removed ${launchDaemonPath}; "
 
             # Hide Nudge in Finder
@@ -143,19 +143,19 @@ function resetConfiguration() {
             scriptResult+="Uninstalling Nudge Post-install … "
 
             # Uninstall JSON
-            /bin/rm -fv "${jsonPath}"
+            /bin/rm -f "${jsonPath}"
             scriptResult+="Uninstalled ${jsonPath}; "
 
             # Uninstall LaunchAgent
             scriptResult+="Unload ${launchAgentPath} … "
             /bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
-            /bin/rm -fv "${launchAgentPath}"
+            /bin/rm -f "${launchAgentPath}"
             scriptResult+="Uninstalled ${launchAgentPath}; "
 
             # Uninstall LaunchDaemon
             scriptResult+="Unload ${launchDaemonPath} … "
             /bin/launchctl unload -w "${launchDaemonPath}"
-            /bin/rm -fv "${launchDaemonPath}"
+            /bin/rm -f "${launchDaemonPath}"
             scriptResult+="Uninstalled ${launchDaemonPath}; "
 
             # Exit
@@ -168,7 +168,7 @@ function resetConfiguration() {
         "JSON" )
             # Reset JSON
             scriptResult+="Remove ${jsonPath} … "
-            /bin/rm -fv "${jsonPath}"
+            /bin/rm -f "${jsonPath}"
             scriptResult+="Removed ${jsonPath}; "
             ;;
 
@@ -177,7 +177,7 @@ function resetConfiguration() {
             scriptResult+="Unload ${launchAgentPath} … "
             /bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
             scriptResult+="Remove ${launchAgentPath} … "
-            /bin/rm -fv "${launchAgentPath}"
+            /bin/rm -f "${launchAgentPath}"
             scriptResult+="Removed ${launchAgentPath}; "
             ;;
 
@@ -186,7 +186,7 @@ function resetConfiguration() {
             scriptResult+="Unload ${launchDaemonPath} … "
             /bin/launchctl unload -w "${launchDaemonPath}"
             scriptResult+="Remove ${launchDaemonPath} … "
-            /bin/rm -fv "${launchDaemonPath}"
+            /bin/rm -f "${launchDaemonPath}"
             scriptResult+="Removed ${launchDaemonPath}; "
             ;;
 
