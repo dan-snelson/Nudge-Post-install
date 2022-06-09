@@ -10,7 +10,8 @@
 ####################################################################################################
 #
 #   Version 0.0.15, 08-Jun-2022, Dan K. Snelson (@dan-snelson)
-#       Added a `Uninstall` option to the `resetConfiguration` function
+#       Added an `Uninstall` option to the `resetConfiguration` function
+#       Started macOS Ventura logic (using macOS Monterey's deadline)
 #
 ####################################################################################################
 
@@ -23,7 +24,7 @@
 ####################################################################################################
 
 scriptVersion="0.0.15"
-scriptResult="Version ${scriptVersion};"
+scriptResult="Version ${scriptVersion}; "
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
 authorizationKey="${4}"                     # Authorization Key to prevent unauthorized execution via Jamf Remote
@@ -33,6 +34,7 @@ requiredBigSurMinimumOSVersion="${7}"       # Required macOS Big Sur Minimum Ver
 requiredBigSurInstallationDate="${8}"       # Required macOS Big SurInstallation Date & Time (i.e., 2022-03-21T10:00:00Z)
 requiredMontereyMinimumOSVersion="${9}"     # Required macOS Monterey Minimum Version (i.e., 12.3)
 requiredMontereyInstallationDate="${10}"    # Required macOS Monterey Installation Date & Time (i.e., 2022-03-21T10:00:00Z)
+requiredVenturaMinimumOSVersion="${11}"     # Required macOS Ventura Minimum Version (i.e., 13.1)
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
 launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
@@ -42,6 +44,7 @@ osProductVersion=$( /usr/bin/sw_vers -productVersion )
 case "${osProductVersion}" in
     11* ) deadline="${requiredBigSurInstallationDate}"    ;;
     12* ) deadline="${requiredMontereyInstallationDate}"  ;;
+    13* ) deadline="${requiredMontereyInstallationDate}"  ;;
 esac
 
 
@@ -342,6 +345,18 @@ if [[ ! -f ${jsonPath} ]]; then
         "requiredInstallationDate": "${requiredMontereyInstallationDate}",
         "requiredMinimumOSVersion": "${requiredMontereyMinimumOSVersion}",
         "targetedOSVersionsRule": "12"
+        },
+        {
+        "aboutUpdateURLs": [
+            {
+            "_language": "en",
+            "aboutUpdateURL": "https://www.apple.com/macos/macos-ventura-preview/"
+            }
+        ],
+        "majorUpgradeAppPath": "/Applications/Install macOS 13 beta.app",
+        "requiredInstallationDate": "${requiredMontereyInstallationDate}",
+        "requiredMinimumOSVersion": "${requiredVenturaMinimumOSVersion}",
+        "targetedOSVersionsRule": "13"
         }
     ],
     "userExperience": {
