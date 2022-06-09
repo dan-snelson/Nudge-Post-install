@@ -11,6 +11,7 @@
 #
 #   Version 0.0.15, 08-Jun-2022, Dan K. Snelson (@dan-snelson)
 #       Added an `Uninstall` option to the `resetConfiguration` function
+#       Removed verbosity when removing files
 #       Started macOS Ventura logic (using macOS Monterey's deadline)
 #
 ####################################################################################################
@@ -103,21 +104,21 @@ function resetConfiguration() {
 
             # Reset JSON
             scriptResult+="Remove ${jsonPath} … "
-            /bin/rm -f "${jsonPath}"
+            /bin/rm -f "${jsonPath}" 2>&1
             scriptResult+="Removed ${jsonPath}; "
 
             # Reset LaunchAgent
             scriptResult+="Unload ${launchAgentPath} … "
-            /bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
+            /bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}" 2>&1
             scriptResult+="Remove ${launchAgentPath} … "
-            /bin/rm -f "${launchAgentPath}"
+            /bin/rm -f "${launchAgentPath}"  2>&1
             scriptResult+="Removed ${launchAgentPath}; "
 
             # Reset LaunchDaemon
             scriptResult+="Unload ${launchDaemonPath} … "
-            /bin/launchctl unload -w "${launchDaemonPath}"
+            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
             scriptResult+="Remove ${launchDaemonPath} … "
-            /bin/rm -f "${launchDaemonPath}"
+            /bin/rm -f "${launchDaemonPath}" 2>&1
             scriptResult+="Removed ${launchDaemonPath}; "
 
             # Hide Nudge in Finder
@@ -423,7 +424,7 @@ fi
 
 if [[ ! -f ${launchAgentPath} ]]; then
 
-    scriptResult+="Create ${launchAgentPath} …"
+    scriptResult+="Create ${launchAgentPath} … "
 
     cat <<EOF > "${launchAgentPath}"
 <?xml version="1.0" encoding="UTF-8"?>
