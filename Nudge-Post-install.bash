@@ -9,8 +9,8 @@
 #
 ####################################################################################################
 #
-#   Version 0.0.14, 03-Jun-2022, Dan K. Snelson (@dan-snelson)
-#       Updates for Nudge 1.1.7.81411
+#   Version 0.0.15, 08-Jun-2022, Dan K. Snelson (@dan-snelson)
+#       Added a `Uninstall` option to the `resetConfiguration` function
 #
 ####################################################################################################
 
@@ -22,7 +22,7 @@
 #
 ####################################################################################################
 
-scriptVersion="0.0.14"
+scriptVersion="0.0.15"
 scriptResult="Version ${scriptVersion};"
 loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )
 loggedInUserID=$( /usr/bin/id -u "${loggedInUser}" )
@@ -134,6 +134,36 @@ function resetConfiguration() {
             fi
 
             scriptResult+="Reset All Configuration Files; "
+            ;;
+
+        "Uninstall" )
+           # Uninstall Nudge Post-install
+            echo "Uninstalling Nudge Post-install …"
+
+            # Uninstall JSON
+            echo "Uninstall ${jsonPath} …"
+            /bin/rm -fv "${jsonPath}"
+            scriptResult+="Uninstalled ${jsonPath}; "
+
+            # Uninstall LaunchAgent
+            echo "Unload ${launchAgentPath} …"
+            /bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
+            echo "Uninstall ${launchAgentPath} …"
+            /bin/rm -fv "${launchAgentPath}"
+            scriptResult+="Uninstalled ${launchAgentPath}; "
+
+            # Uninstall LaunchDaemon
+            echo "Unload ${launchDaemonPath} …"
+            /bin/launchctl unload -w "${launchDaemonPath}"
+            echo "Uninstall ${launchDaemonPath} …"
+            /bin/rm -fv "${launchDaemonPath}"
+            scriptResult+="Uninstalled ${launchDaemonPath}; "
+
+            # Exit
+            scriptResult+="Uninstalled all Nudge Post-install configuration files; "
+            scriptResult+="Thanks for using Nudge Post-install!"
+            echo "${scriptResult}"
+            exit 0
             ;;
 
         "JSON" )

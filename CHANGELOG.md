@@ -1,5 +1,7 @@
 # CHANGELOG
 
+## 0.0.15
+- Added an `Uninstall` option to the `resetConfiguration` function
 ## 0.0.14
 
 ### 03-Jun-2022
