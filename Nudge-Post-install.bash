@@ -83,7 +83,6 @@ function authorizationCheck() {
 
 function resetConfiguration() {
 
-    echo "Reset Configuration: ${1}"
     scriptResult+="Reset Configuration: ${1}; "
 
     case ${1} in
