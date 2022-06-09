@@ -2,6 +2,8 @@
 
 ## 0.0.15
 - Added an `Uninstall` option to the `resetConfiguration` function
+- Removed verbosity when removing files
+- Started macOS Ventura logic (using macOS Monterey's deadline)
 ## 0.0.14
 
 ### 03-Jun-2022
