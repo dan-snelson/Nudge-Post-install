@@ -212,7 +212,7 @@ function resetConfiguration() {
 # Logging preamble
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-echo "Nudge Post-install (${scriptVersion})"
+scriptResult+="Nudge Post-install (${scriptVersion}) "
 
 
 
@@ -239,7 +239,7 @@ resetConfiguration "${resetConfiguration}"
 
 if [[ ! -f ${launchDaemonPath} ]]; then
 
-    echo "Create ${launchDaemonPath} …"
+    scriptResult+="Create ${launchDaemonPath} … "
 
     cat <<EOF > "${launchDaemonPath}"
 <?xml version="1.0" encoding="UTF-8"?>
@@ -271,7 +271,6 @@ EOF
 
 else
 
-    echo "${launchDaemonPath} exists"
     scriptResult+="${launchDaemonPath} exists; "
 
 fi
@@ -284,11 +283,11 @@ fi
 
 if [[ ! -f ${jsonPath} ]]; then
 
-    echo "Create ${jsonPath} …"
+    scriptResult+="Create ${jsonPath} … "
     /usr/bin/touch "${jsonPath}"
     scriptResult+="Created ${jsonPath}; "
 
-    echo "Write ${jsonPath} …"
+    scriptResult+="Write ${jsonPath} … "
 
     cat <<EOF > "${jsonPath}"
 {
@@ -413,7 +412,6 @@ EOF
 
 else
 
-    echo "${jsonPath} exists"
     scriptResult+="${jsonPath} exists; "
 
 fi
@@ -426,7 +424,7 @@ fi
 
 if [[ ! -f ${launchAgentPath} ]]; then
 
-    echo "Create ${launchAgentPath} …"
+    scriptResult+="Create ${launchAgentPath} …"
 
     cat <<EOF > "${launchAgentPath}"
 <?xml version="1.0" encoding="UTF-8"?>
@@ -464,7 +462,7 @@ EOF
 
     scriptResult+="Created ${launchAgentPath}; "
 
-    echo "Set ${launchAgentPath} file permissions ..."
+    scriptResult+="Set ${launchAgentPath} file permissions ..."
     /usr/sbin/chown root:wheel "${launchAgentPath}"
     /bin/chmod 644 "${launchAgentPath}"
     /bin/chmod +x "${launchAgentPath}"
@@ -472,7 +470,7 @@ EOF
 
 else
 
-    echo "${launchAgentPath} exists"
+    scriptResult+="${launchAgentPath} exists"
     scriptResult+="${launchAgentPath} exists; "
 
 fi
@@ -486,13 +484,13 @@ fi
 # https://github.com/macadmins/nudge/blob/main/build_assets/postinstall-launchagent
 # Only enable the LaunchAgent if there is a user logged in, otherwise rely on built in LaunchAgent behavior
 if [[ -z "$loggedInUser" ]]; then
-    echo "Did not detect user"
+    scriptResult+="Did not detect user"
 elif [[ "$loggedInUser" == "loginwindow" ]]; then
-    echo "Detected Loginwindow Environment"
+    scriptResult+="Detected Loginwindow Environment"
 elif [[ "$loggedInUser" == "_mbsetupuser" ]]; then
-    echo "Detect SetupAssistant Environment"
+    scriptResult+="Detect SetupAssistant Environment"
 elif [[ "$loggedInUser" == "root" ]]; then
-    echo "Detect root as currently logged-in user"
+    scriptResult+="Detect root as currently logged-in user"
 else
     # Unload the LaunchAgent so it can be triggered on re-install
     /bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
