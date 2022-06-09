@@ -141,24 +141,21 @@ function resetConfiguration() {
 
         "Uninstall" )
            # Uninstall Nudge Post-install
-            echo "Uninstalling Nudge Post-install …"
+            scriptResult+="Uninstalling Nudge Post-install … "
 
             # Uninstall JSON
-            echo "Uninstall ${jsonPath} …"
             /bin/rm -fv "${jsonPath}"
             scriptResult+="Uninstalled ${jsonPath}; "
 
             # Uninstall LaunchAgent
-            echo "Unload ${launchAgentPath} …"
+            scriptResult+="Unload ${launchAgentPath} … "
             /bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
-            echo "Uninstall ${launchAgentPath} …"
             /bin/rm -fv "${launchAgentPath}"
             scriptResult+="Uninstalled ${launchAgentPath}; "
 
             # Uninstall LaunchDaemon
-            echo "Unload ${launchDaemonPath} …"
+            scriptResult+="Unload ${launchDaemonPath} … "
             /bin/launchctl unload -w "${launchDaemonPath}"
-            echo "Uninstall ${launchDaemonPath} …"
             /bin/rm -fv "${launchDaemonPath}"
             scriptResult+="Uninstalled ${launchDaemonPath}; "
 
