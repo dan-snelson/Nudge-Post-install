@@ -90,7 +90,7 @@ function resetConfiguration() {
 
         "All" )
             # Reset JSON, LaunchAgent, LaunchDaemon, Hide Nudge
-            echo "Reset All Configuration Files"
+            scriptResult+="Reset All Configuration Files … "
 
             # Reset User Preferences
             # For testing only; see:
@@ -103,31 +103,31 @@ function resetConfiguration() {
             # scriptResult+="Removed User Preferences; "
 
             # Reset JSON
-            echo "Remove ${jsonPath} …"
+            scriptResult+="Remove ${jsonPath} … "
             /bin/rm -fv "${jsonPath}"
             scriptResult+="Removed ${jsonPath}; "
 
             # Reset LaunchAgent
-            echo "Unload ${launchAgentPath} …"
+            scriptResult+="Unload ${launchAgentPath} … "
             /bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
-            echo "Remove ${launchAgentPath} …"
+            scriptResult+="Remove ${launchAgentPath} … "
             /bin/rm -fv "${launchAgentPath}"
             scriptResult+="Removed ${launchAgentPath}; "
 
             # Reset LaunchDaemon
-            echo "Unload ${launchDaemonPath} …"
+            scriptResult+="Unload ${launchDaemonPath} … "
             /bin/launchctl unload -w "${launchDaemonPath}"
-            echo "Remove ${launchDaemonPath} …"
+            scriptResult+="Remove ${launchDaemonPath} … "
             /bin/rm -fv "${launchDaemonPath}"
             scriptResult+="Removed ${launchDaemonPath}; "
 
             # Hide Nudge in Finder
-            echo "Hide Nudge in Finder …"
+            scriptResult+="Hide Nudge in Finder … "
             /usr/bin/chflags hidden "/Applications/Utilities/Nudge.app" 
             scriptResult+="Hid Nudge in Finder; "
 
             # Hide Nudge in Launchpad
-            echo "Hide Nudge in Launchpad …"
+            scriptResult+="Hide Nudge in Launchpad … "
             if [[ -z "$loggedInUser" ]]; then
                 scriptResult+="Did not detect logged-in user"
             else
@@ -168,32 +168,31 @@ function resetConfiguration() {
 
         "JSON" )
             # Reset JSON
-            echo "Remove ${jsonPath} …"
+            scriptResult+="Remove ${jsonPath} … "
             /bin/rm -fv "${jsonPath}"
             scriptResult+="Removed ${jsonPath}; "
             ;;
 
         "LaunchAgent" )
             # Reset LaunchAgent
-            echo "Unload ${launchAgentPath} …"
+            scriptResult+="Unload ${launchAgentPath} … "
             /bin/launchctl asuser "${loggedInUserID}" /bin/launchctl unload -w "${launchAgentPath}"
-            echo "Remove ${launchAgentPath} …"
+            scriptResult+="Remove ${launchAgentPath} … "
             /bin/rm -fv "${launchAgentPath}"
             scriptResult+="Removed ${launchAgentPath}; "
             ;;
 
         "LaunchDaemon" )
             # Reset LaunchDaemon
-            echo "Unload ${launchDaemonPath} …"
+            scriptResult+="Unload ${launchDaemonPath} … "
             /bin/launchctl unload -w "${launchDaemonPath}"
-            echo "Remove ${launchDaemonPath} …"
+            scriptResult+="Remove ${launchDaemonPath} … "
             /bin/rm -fv "${launchDaemonPath}"
             scriptResult+="Removed ${launchDaemonPath}; "
             ;;
 
         * )
             # None of the expected options was entered; don't reset anything
-            echo "None of the expected reset options was entered; don't reset anything"
             scriptResult+="None of the expected reset options was entered; don't reset anything; "
             ;;
 
