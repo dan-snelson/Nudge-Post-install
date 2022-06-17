@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Nudge Logs</displayName>
+<description>A script to determine the client-side output of Nudge.</description>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/sh&#13;
+##########################################################&#13;
+# A script to determine the client-side output of Nudge. #&#13;
+##########################################################&#13;
+&#13;
+osProductVersion=$( /usr/bin/sw_vers -productVersion )&#13;
+&#13;
+case "${osProductVersion}" in&#13;
+&#13;
+	10*	)&#13;
+			echo "&lt;result&gt;N/A; macOS ${osProductVersion}&lt;/result&gt;"&#13;
+			;;&#13;
+&#13;
+	11* | 12* | 13* )&#13;
+			loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )&#13;
+			requiredOS=$( /usr/bin/defaults read /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist requiredMinimumOSVersion )&#13;
+			logEntries=$( /usr/bin/grep com.github.macadmins.Nudge /var/log/Nudge.log | /usr/bin/tail -5 | /usr/bin/awk '{ split($2, split_time, "."); $2 = split_time[1]; print }' | /usr/bin/cut -d ' ' -f -2,6- )&#13;
+			echo "&lt;result&gt;Required OS: ${requiredOS}&#13;
+${logEntries}&lt;/result&gt;"&#13;
+			;;&#13;
+esac&#13;
+&#13;
+exit 0</scriptContentsMac>
+</extensionAttribute>

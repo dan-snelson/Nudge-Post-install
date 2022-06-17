@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Nudge Deferrals</displayName>
+<description>A script to determine the number of Nudge deferrals.</description>
+<dataType>number</dataType>
+<scriptContentsMac>#!/bin/sh&#13;
+########################################################&#13;
+# A script to determine the number of Nudge deferrals. #&#13;
+########################################################&#13;
+&#13;
+osProductVersion=$( /usr/bin/sw_vers -productVersion )&#13;
+&#13;
+case "${osProductVersion}" in&#13;
+&#13;
+	10*	)&#13;
+			echo "&lt;result&gt;N/A; macOS ${osProductVersion}&lt;/result&gt;"&#13;
+			;;&#13;
+&#13;
+	11* | 12* | 13* )&#13;
+			loggedInUser=$( /bin/echo "show State:/Users/ConsoleUser" | /usr/sbin/scutil | /usr/bin/awk '/Name :/ { print $3 }' )&#13;
+			deferrals=$( /usr/bin/defaults read /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist userDeferrals )&#13;
+			echo "&lt;result&gt;${deferrals}&lt;/result&gt;"&#13;
+			;;&#13;
+esac&#13;
+&#13;
+exit 0</scriptContentsMac>
+</extensionAttribute>
