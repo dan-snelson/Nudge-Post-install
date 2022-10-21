@@ -1,6 +1,19 @@
 # CHANGELOG
 
+## 0.0.16
+
+### 21-Oct-2022
+> :warning: **BREAKING CHANGE**
+>  - Reordered Script Parameters
+> - Added default Script Parameter values (for when Script Parameters are left blank in a Jamf Pro policy)
+- Removed `authorizationCheck` function
+- Added macOS Ventura settings
+- Replaced `scriptResult` with `updateScriptLog`
+- Random clean-up
+
 ## 0.0.15
+
+### 08-Jun-2022
 - Added an `Uninstall` option to the `resetConfiguration` function
 - Removed verbosity when removing files
 - Started macOS Ventura logic (using macOS Monterey's deadline)
