@@ -125,27 +125,27 @@ function resetConfiguration() {
             # * https://github.com/macadmins/nudge/wiki/User-Deferrals#testing-and-resetting-nudge
 
             # echo "Reset User Preferences"
-            # /bin/rm -f /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
+            # rm -f /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
             # pkill -l -U "${loggedInUser}" cfprefsd
             # updateScriptLog "Removed User Preferences"
 
             # Reset JSON
             updateScriptLog "Remove ${jsonPath} … "
-            /bin/rm -f "${jsonPath}" 2>&1
+            rm -f "${jsonPath}" 2>&1
             updateScriptLog "Removed ${jsonPath}"
 
             # Reset LaunchAgent
             updateScriptLog "Unload ${launchAgentPath} … "
             runAsUser launchctl unload -w "${launchAgentPath}" 2>&1
             updateScriptLog "Remove ${launchAgentPath} … "
-            /bin/rm -f "${launchAgentPath}" 2>&1
+            rm -f "${launchAgentPath}" 2>&1
             updateScriptLog "Removed ${launchAgentPath}"
 
             # Reset LaunchDaemon
             updateScriptLog "Unload ${launchDaemonPath} … "
-            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
+            runAsUser launchctl unload -w "${launchDaemonPath}" 2>&1
             updateScriptLog "Remove ${launchDaemonPath} … "
-            /bin/rm -f "${launchDaemonPath}" 2>&1
+            rm -f "${launchDaemonPath}" 2>&1
             updateScriptLog "Removed ${launchDaemonPath}"
 
             # Hide Nudge in Finder
@@ -182,7 +182,7 @@ function resetConfiguration() {
 
             # Uninstall LaunchDaemon
             updateScriptLog "Unload ${launchDaemonPath} … "
-            launchctl unload -w "${launchDaemonPath}"
+            runAsUser launchctl unload -w "${launchDaemonPath}"
             rm -f "${launchDaemonPath}"
             updateScriptLog "Uninstalled ${launchDaemonPath}"
 
@@ -211,7 +211,7 @@ function resetConfiguration() {
         "LaunchDaemon" )
             # Reset LaunchDaemon
             updateScriptLog "Unload ${launchDaemonPath} … "
-            launchctl unload -w "${launchDaemonPath}"
+            runAsUser launchctl unload -w "${launchDaemonPath}"
             updateScriptLog "Remove ${launchDaemonPath} … "
             rm -f "${launchDaemonPath}"
             updateScriptLog "Removed ${launchDaemonPath}"
@@ -295,7 +295,7 @@ if [[ ! -f ${launchDaemonPath} ]]; then
 </plist>
 EOF
 
-    launchctl load -w "${launchDaemonPath}"
+    runAsUser launchctl load -w "${launchDaemonPath}"
 
 else
 
@@ -491,14 +491,13 @@ EOF
     updateScriptLog "Created ${launchAgentPath}"
 
     updateScriptLog "Set ${launchAgentPath} file permissions ..."
-    /usr/sbin/chown root:wheel "${launchAgentPath}"
+    chown root:wheel "${launchAgentPath}"
     chmod 644 "${launchAgentPath}"
     chmod +x "${launchAgentPath}"
     updateScriptLog "Set ${launchAgentPath} file permissions"
 
 else
 
-    updateScriptLog "${launchAgentPath} exists"
     updateScriptLog "${launchAgentPath} exists"
 
 fi
