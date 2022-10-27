@@ -143,7 +143,7 @@ function resetConfiguration() {
 
             # Reset LaunchDaemon
             updateScriptLog "Unload ${launchDaemonPath} … "
-            runAsUser launchctl unload -w "${launchDaemonPath}" 2>&1
+            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
             updateScriptLog "Remove ${launchDaemonPath} … "
             rm -f "${launchDaemonPath}" 2>&1
             updateScriptLog "Removed ${launchDaemonPath}"
@@ -182,7 +182,7 @@ function resetConfiguration() {
 
             # Uninstall LaunchDaemon
             updateScriptLog "Unload ${launchDaemonPath} … "
-            runAsUser launchctl unload -w "${launchDaemonPath}"
+            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
             rm -f "${launchDaemonPath}"
             updateScriptLog "Uninstalled ${launchDaemonPath}"
 
@@ -211,7 +211,7 @@ function resetConfiguration() {
         "LaunchDaemon" )
             # Reset LaunchDaemon
             updateScriptLog "Unload ${launchDaemonPath} … "
-            runAsUser launchctl unload -w "${launchDaemonPath}"
+            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
             updateScriptLog "Remove ${launchDaemonPath} … "
             rm -f "${launchDaemonPath}"
             updateScriptLog "Removed ${launchDaemonPath}"
@@ -295,7 +295,7 @@ if [[ ! -f ${launchDaemonPath} ]]; then
 </plist>
 EOF
 
-    runAsUser launchctl load -w "${launchDaemonPath}"
+    /bin/launchctl load -w "${launchDaemonPath}" 2>&1
 
 else
 
