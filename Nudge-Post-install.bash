@@ -68,8 +68,8 @@ esac
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 if [[ -z "${loggedInUser}" || "${loggedInUser}" == "loginwindow" ]]; then
-    updateScriptLog "No user logged-in; exiting."
-    exit 1
+    echo "No user logged-in; exiting."
+    exit #1
 else
     loggedInUserID=$(id -u "${loggedInUser}")
 fi
