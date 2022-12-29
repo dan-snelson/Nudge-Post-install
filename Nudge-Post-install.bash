@@ -9,14 +9,8 @@
 #
 ####################################################################################################
 #
-# Version 0.0.16, 21-Oct-2022, Dan K. Snelson (@dan-snelson)
-#   **BREAKING CHANGES**
-#       - Reordered Script Parameters
-#       - Added default values (for when Script Parameters are left blank in a Jamf Pro policy)
-#   Removed `authorizationCheck` function
-#   Added macOS Ventura settings
-#   Replaced `scriptResult` with `updateScriptLog`
-#   Random clean-up
+# Version 0.0.17, 29-Dec-2022, Dan K. Snelson (@dan-snelson)
+#  - Updates for Nudge [`1.1.10`](https://github.com/macadmins/nudge/pull/435)
 #
 ####################################################################################################
 
@@ -32,17 +26,17 @@
 # Global Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="0.0.16"
+scriptVersion="0.0.17"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
 loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }' )
 plistDomain="${4:-"org.churchofjesuschrist"}"                       # Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
 resetConfiguration="${5:-"All"}"                                    # Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
 requiredBigSurMinimumOSVersion="${6:-"11.99"}"                      # Required macOS Big Sur Minimum Version (i.e., 11.7.1)
-requiredBigSurInstallationDate="${7:-"2022-11-24T10:00:00Z"}"       # Required macOS Big SurInstallation Date & Time (i.e., 2022-11-24T10:00:00Z)
+requiredBigSurInstallationDate="${7:-"2023-01-17T10:00:00Z"}"       # Required macOS Big SurInstallation Date & Time (i.e., 2023-01-17T10:00:00Z)
 requiredMontereyMinimumOSVersion="${8:-"12.99"}"                    # Required macOS Monterey Minimum Version (i.e., 12.6.1)
-requiredMontereyInstallationDate="${9:-"2022-11-24T10:00:00Z"}"     # Required macOS Monterey Installation Date & Time (i.e., 2022-11-24T10:00:00Z)
+requiredMontereyInstallationDate="${9:-"2023-01-17T10:00:00Z"}"     # Required macOS Monterey Installation Date & Time (i.e., 2023-01-17T10:00:00Z)
 requiredVenturaMinimumOSVersion="${10:-"13.99"}"                    # Required macOS Ventura Minimum Version (i.e., 13.1)
-requiredVenturaInstallationDate="${11:-"2022-11-24T10:00:00Z"}"     # Required macOS Ventura Installation Date & Time (i.e., 2022-11-24T10:00:00Z)
+requiredVenturaInstallationDate="${11:-"2023-01-17T10:00:00Z"}"     # Required macOS Ventura Installation Date & Time (i.e., 2023-01-17T10:00:00Z)
 scriptLog="/var/log/${plistDomain}.log"
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
@@ -384,6 +378,7 @@ if [[ ! -f ${jsonPath} ]]; then
     ],
     "userExperience": {
         "allowGracePeriods": false,
+        "allowLaterDeferralButton": true,
         "allowUserQuitDeferrals": true,
         "allowedDeferrals": 1000000,
         "allowedDeferralsUntilForcedSecondaryQuitButton": 14,
