@@ -2,7 +2,7 @@
 
 ## 0.0.17
 
-### 29-Dec-2022
+### 03-Jan-2023
 - Updates for Nudge [`1.1.10`](https://github.com/macadmins/nudge/pull/435)
 
 ## 0.0.16
