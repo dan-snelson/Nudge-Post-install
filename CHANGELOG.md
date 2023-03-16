@@ -1,12 +1,16 @@
 # CHANGELOG
 
-## 0.0.17
+## 0.0.18
+### 16-Mar-2023
+- Set `majorUpgradeAppPath` to `/System/Library/CoreServices/Software Update.app`
+- Set `disableSoftwareUpdateWorkflow` to `true`
+- Updated `launchctl` load / unload commands
 
+## 0.0.17
 ### 03-Jan-2023
 - Updates for Nudge [`1.1.10`](https://github.com/macadmins/nudge/pull/435)
 
 ## 0.0.16
-
 ### 21-Oct-2022
 > :warning: **BREAKING CHANGE**
 >  - Reordered Script Parameters
@@ -17,17 +21,17 @@
 - Random clean-up
 
 ## 0.0.15
-
 ### 08-Jun-2022
 - Added an `Uninstall` option to the `resetConfiguration` function
 - Removed verbosity when removing files
 - Started macOS Ventura logic (using macOS Monterey's deadline)
-## 0.0.14
 
+## 0.0.14
 ### 03-Jun-2022
 - Updates for Nudge 1.1.7.81411
     - `terminateApplicationsOnLaunch`
     - `customDeferralDropdownText`
+
 ## 0.0.13
 ### 25-May-2022
 - Updates for Nudge 1.1.7.81388

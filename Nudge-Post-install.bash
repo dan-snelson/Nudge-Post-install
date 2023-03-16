@@ -9,8 +9,10 @@
 #
 ####################################################################################################
 #
-# Version 0.0.17, 03-Jan-2023, Dan K. Snelson (@dan-snelson)
-#  - Updates for Nudge [`1.1.10`](https://github.com/macadmins/nudge/pull/435)
+# Version 0.0.18, 16-Mar-2023, Dan K. Snelson (@dan-snelson)
+#   - Set `majorUpgradeAppPath` to `/System/Library/CoreServices/Software Update.app`
+#   - Set `disableSoftwareUpdateWorkflow` to `true`
+#   - Updated `launchctl` load / unload commands
 #
 ####################################################################################################
 
@@ -26,17 +28,17 @@
 # Global Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="0.0.17"
-export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
+scriptVersion="0.0.18-rc1"
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }' )
 plistDomain="${4:-"org.churchofjesuschrist"}"                       # Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
 resetConfiguration="${5:-"All"}"                                    # Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
-requiredBigSurMinimumOSVersion="${6:-"11.99"}"                      # Required macOS Big Sur Minimum Version (i.e., 11.7.1)
-requiredBigSurInstallationDate="${7:-"2023-01-17T10:00:00Z"}"       # Required macOS Big SurInstallation Date & Time (i.e., 2023-01-17T10:00:00Z)
-requiredMontereyMinimumOSVersion="${8:-"12.99"}"                    # Required macOS Monterey Minimum Version (i.e., 12.6.1)
-requiredMontereyInstallationDate="${9:-"2023-01-17T10:00:00Z"}"     # Required macOS Monterey Installation Date & Time (i.e., 2023-01-17T10:00:00Z)
-requiredVenturaMinimumOSVersion="${10:-"13.99"}"                    # Required macOS Ventura Minimum Version (i.e., 13.1)
-requiredVenturaInstallationDate="${11:-"2023-01-17T10:00:00Z"}"     # Required macOS Ventura Installation Date & Time (i.e., 2023-01-17T10:00:00Z)
+requiredBigSurMinimumOSVersion="${6:-"11.99"}"                      # Required macOS Big Sur Minimum Version (i.e., 11.7.4)
+requiredBigSurInstallationDate="${7:-"2023-02-14T10:00:00Z"}"       # Required macOS Big SurInstallation Date & Time (i.e., 2023-03-17T10:00:00Z)
+requiredMontereyMinimumOSVersion="${8:-"12.99"}"                    # Required macOS Monterey Minimum Version (i.e., 12.6.3)
+requiredMontereyInstallationDate="${9:-"2023-02-14T10:00:00Z"}"     # Required macOS Monterey Installation Date & Time (i.e., 2023-03-17T10:00:00Z)
+requiredVenturaMinimumOSVersion="${10:-"13.99"}"                    # Required macOS Ventura Minimum Version (i.e., 13.2.1)
+requiredVenturaInstallationDate="${11:-"2023-02-14T10:00:00Z"}"     # Required macOS Ventura Installation Date & Time (i.e., 2023-03-17T10:00:00Z)
 scriptLog="/var/log/${plistDomain}.log"
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
@@ -130,14 +132,14 @@ function resetConfiguration() {
 
             # Reset LaunchAgent
             updateScriptLog "Unload ${launchAgentPath} … "
-            runAsUser launchctl unload -w "${launchAgentPath}" 2>&1
+            runAsUser launchctl bootout gui/"${loggedInUserID}" "${launchAgentPath}" 2>&1
             updateScriptLog "Remove ${launchAgentPath} … "
             rm -f "${launchAgentPath}" 2>&1
             updateScriptLog "Removed ${launchAgentPath}"
 
             # Reset LaunchDaemon
             updateScriptLog "Unload ${launchDaemonPath} … "
-            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
+            launchctl bootout system "${launchDaemonPath}"
             updateScriptLog "Remove ${launchDaemonPath} … "
             rm -f "${launchDaemonPath}" 2>&1
             updateScriptLog "Removed ${launchDaemonPath}"
@@ -170,13 +172,13 @@ function resetConfiguration() {
 
             # Uninstall LaunchAgent
             updateScriptLog "Unload ${launchAgentPath} … "
-            runAsUser launchctl unload -w "${launchAgentPath}"
+            runAsUser launchctl bootout gui/"${loggedInUserID}" "${launchAgentPath}"
             rm -f "${launchAgentPath}"
             updateScriptLog "Uninstalled ${launchAgentPath}"
 
             # Uninstall LaunchDaemon
             updateScriptLog "Unload ${launchDaemonPath} … "
-            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
+            launchctl bootout system "${launchDaemonPath}"
             rm -f "${launchDaemonPath}"
             updateScriptLog "Uninstalled ${launchDaemonPath}"
 
@@ -196,7 +198,7 @@ function resetConfiguration() {
         "LaunchAgent" )
             # Reset LaunchAgent
             updateScriptLog "Unload ${launchAgentPath} … "
-            runAsUser launchctl unload -w "${launchAgentPath}"
+            runAsUser launchctl bootout gui/"${loggedInUserID}" "${launchAgentPath}"
             updateScriptLog "Remove ${launchAgentPath} … "
             rm -f "${launchAgentPath}"
             updateScriptLog "Removed ${launchAgentPath}"
@@ -205,7 +207,7 @@ function resetConfiguration() {
         "LaunchDaemon" )
             # Reset LaunchDaemon
             updateScriptLog "Unload ${launchDaemonPath} … "
-            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
+            launchctl bootout system "${launchDaemonPath}" 2>&1
             updateScriptLog "Remove ${launchDaemonPath} … "
             rm -f "${launchDaemonPath}"
             updateScriptLog "Removed ${launchDaemonPath}"
@@ -243,7 +245,7 @@ fi
 # Logging preamble
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-updateScriptLog "Nudge Post-install (${scriptVersion})"
+updateScriptLog "\n\n###\n# Nudge Post-install (${scriptVersion})\n###\n"
 
 
 
@@ -289,7 +291,7 @@ if [[ ! -f ${launchDaemonPath} ]]; then
 </plist>
 EOF
 
-    /bin/launchctl load -w "${launchDaemonPath}" 2>&1
+    launchctl bootstrap system "${launchDaemonPath}" 2>&1
 
 else
 
@@ -318,13 +320,13 @@ if [[ ! -f ${jsonPath} ]]; then
             "us.zoom.xos",
             "com.cisco.webexmeetingsapp"
         ],
-        "acceptableAssertionUsage": false,
+        "acceptableAssertionUsage": true,
         "acceptableAssertionApplicationNames": [
             "zoom.us",
             "Meeting Center"
         ],
-        "acceptableCameraUsage": false,
-        "acceptableScreenSharingUsage": false,
+        "acceptableCameraUsage": true,
+        "acceptableScreenSharingUsage": true,
         "aggressiveUserExperience": true,
         "aggressiveUserFullScreenExperience": true,
         "asynchronousSoftwareUpdate": true,
@@ -333,8 +335,8 @@ if [[ ! -f ${jsonPath} ]]; then
         "blockedApplicationBundleIDs": [
             "com.apple.ColorSyncUtility",
             "com.apple.DigitalColorMeter"
-            ],
-        "disableSoftwareUpdateWorkflow": false,
+        ],
+        "disableSoftwareUpdateWorkflow": true,
         "enforceMinorUpdates": true,
         "terminateApplicationsOnLaunch": true
     },
@@ -346,7 +348,7 @@ if [[ ! -f ${jsonPath} ]]; then
             "aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos116"
             }
         ],
-        "majorUpgradeAppPath": "/Applications/Install macOS Big Sur.app",
+        "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
         "requiredInstallationDate": "${requiredBigSurInstallationDate}",
         "requiredMinimumOSVersion": "${requiredBigSurMinimumOSVersion}",
         "targetedOSVersionsRule": "11"
@@ -358,7 +360,7 @@ if [[ ! -f ${jsonPath} ]]; then
             "aboutUpdateURL": "https://www.apple.com/macos/monterey/"
             }
         ],
-        "majorUpgradeAppPath": "/Applications/Install macOS Monterey.app",
+        "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
         "requiredInstallationDate": "${requiredMontereyInstallationDate}",
         "requiredMinimumOSVersion": "${requiredMontereyMinimumOSVersion}",
         "targetedOSVersionsRule": "12"
@@ -370,15 +372,15 @@ if [[ ! -f ${jsonPath} ]]; then
             "aboutUpdateURL": "https://www.apple.com/macos/ventura/"
             }
         ],
-        "majorUpgradeAppPath": "/Applications/Install macOS Ventura.app",
+        "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
         "requiredInstallationDate": "${requiredVenturaInstallationDate}",
         "requiredMinimumOSVersion": "${requiredVenturaMinimumOSVersion}",
         "targetedOSVersionsRule": "13"
         }
     ],
     "userExperience": {
-        "allowGracePeriods": false,
-        "allowLaterDeferralButton": true,
+        "allowGracePeriods": true,
+        "allowLaterDeferralButton": false,
         "allowUserQuitDeferrals": true,
         "allowedDeferrals": 1000000,
         "allowedDeferralsUntilForcedSecondaryQuitButton": 14,
@@ -431,7 +433,7 @@ if [[ ! -f ${jsonPath} ]]; then
 }
 EOF
 
-    updateScriptLog "Wrote Nudge JSON file to ${jsonPath}"
+    updateScriptLog "Wrote Nudge JSON file to ${jsonPath}; "
 
 else
 
@@ -483,9 +485,9 @@ if [[ ! -f ${launchAgentPath} ]]; then
 </plist>
 EOF
 
-    updateScriptLog "Created ${launchAgentPath}"
+    updateScriptLog "Created ${launchAgentPath};"
 
-    updateScriptLog "Set ${launchAgentPath} file permissions ..."
+    updateScriptLog "Setting ${launchAgentPath} file permissions ..."
     chown root:wheel "${launchAgentPath}"
     chmod 644 "${launchAgentPath}"
     chmod +x "${launchAgentPath}"
@@ -514,12 +516,19 @@ elif [[ "$loggedInUser" == "_mbsetupuser" ]]; then
 elif [[ "$loggedInUser" == "root" ]]; then
     updateScriptLog "Detect root as currently logged-in user"
 else
-    # Unload the LaunchAgent so it can be triggered on re-install
-    runAsUser launchctl unload -w "${launchAgentPath}"
-    # Kill Nudge just in case (say someone manually opens it and not launched via LaunchAgent
+
+    updateScriptLog "Unload the LaunchAgent so it can be triggered on re-install"
+    # runAsUser launchctl bootout gui/"${loggedInUserID}" "${launchAgentPath}" 2>&1
+    launchctl bootout gui/"${loggedInUserID}" "${launchAgentPath}" 2>&1
+
+    updateScriptLog "Kill Nudge just in case (say someone manually opens it and not launched via LaunchAgent"
     killall Nudge
-    # Load the LaunchAgent
-    runAsUser launchctl load -w "${launchAgentPath}"
+
+    updateScriptLog "Load the LaunchAgent …"
+    # runAsUser launchctl bootstrap gui/"${loggedInUserID}" "${launchAgentPath}" 2>&1
+    launchctl bootstrap gui/"${loggedInUserID}" "${launchAgentPath}" 2>&1
+
+
 fi
 
 
