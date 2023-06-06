@@ -40,8 +40,8 @@ requiredTargetedOSVersionsRule="${8:-"13"}"
 
 requiredAboutUpdateURL="${9:-"aboutUpdateURL"}"
 
-requiredMainContentText="${9:-"mainContentText"}"
-requiredSubHeader="${10:-"subHeader"}"
+requiredMainContentText="${10:-"mainContentText"}"
+requiredSubHeader="${11:-"subHeader"}"
 
 scriptLog="/var/log/${plistDomain}.NudgePostInstall.log"
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
