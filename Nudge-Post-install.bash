@@ -9,7 +9,7 @@
 #
 ####################################################################################################
 #
-# Version 0.0.17, 03-Jan-2023, Dan K. Snelson (@dan-snelson)
+#  Based on version 0.0.17, 03-Jan-2023, Dan K. Snelson (@dan-snelson)
 #  - Updates for Nudge [`1.1.10`](https://github.com/macadmins/nudge/pull/435)
 #
 ####################################################################################################
@@ -26,36 +26,40 @@
 # Global Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="0.0.17"
+scriptVersion="1.0.0"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
 loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }' )
-plistDomain="${4:-"org.churchofjesuschrist"}"                       # Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
-resetConfiguration="${5:-"All"}"                                    # Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
-requiredBigSurMinimumOSVersion="${6:-"11.99"}"                      # Required macOS Big Sur Minimum Version (i.e., 11.7.1)
-requiredBigSurInstallationDate="${7:-"2023-01-17T10:00:00Z"}"       # Required macOS Big SurInstallation Date & Time (i.e., 2023-01-17T10:00:00Z)
-requiredMontereyMinimumOSVersion="${8:-"12.99"}"                    # Required macOS Monterey Minimum Version (i.e., 12.6.1)
-requiredMontereyInstallationDate="${9:-"2023-01-17T10:00:00Z"}"     # Required macOS Monterey Installation Date & Time (i.e., 2023-01-17T10:00:00Z)
-requiredVenturaMinimumOSVersion="${10:-"13.99"}"                    # Required macOS Ventura Minimum Version (i.e., 13.1)
-requiredVenturaInstallationDate="${11:-"2023-01-17T10:00:00Z"}"     # Required macOS Ventura Installation Date & Time (i.e., 2023-01-17T10:00:00Z)
-scriptLog="/var/log/${plistDomain}.log"
+plistDomain="${4:-"org.corp.app"}"                                      # Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
+
+resetConfiguration="${5:-"All"}"                                        # Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent |
+
+requiredInstallationDate="${6:-"2023-01-17T10:00:00Z"}"                 # Required macOS Installation Date & Time (i.e., 2023-01-17T10:00:00Z)
+
+requiredMinimumOSVersion="${7:-"13.99"}"                                # Required macOS Minimum Version (i.e., 13.1)
+requiredTargetedOSVersionsRule="${8:-"13"}"
+
+requiredAboutUpdateURL="${9:-"aboutUpdateURL"}"
+
+requiredMainContentText="${9:-"mainContentText"}"
+requiredSubHeader="${10:-"subHeader"}"
+
+scriptLog="/var/log/${plistDomain}.NudgePostInstall.log"
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
 launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
 
+####################################################################################################
 
+deadline="${requiredInstallationDate}"
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Set deadline variable based on OS version
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+### Set deadline variable based on OS version
 
-osProductVersion=$( sw_vers -productVersion )
-case "${osProductVersion}" in
-    11* ) deadline="${requiredBigSurInstallationDate}"    ;;
-    12* ) deadline="${requiredMontereyInstallationDate}"  ;;
-    13* ) deadline="${requiredVenturaInstallationDate}"   ;;
-esac
-
-
+# osProductVersion=$( sw_vers -productVersion )
+# case "${osProductVersion}" in
+#     11* ) deadline="${requiredBigSurInstallationDate}"    ;;
+#     12* ) deadline="${requiredMontereyInstallationDate}"  ;;
+#     13* ) deadline="${requiredVenturaInstallationDate}"   ;;
+# esac
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Validate logged-in user
@@ -79,17 +83,13 @@ fi
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Client-side Script Logging
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
 function updateScriptLog() {
     echo -e "$( date +%Y-%m-%d\ %H:%M:%S ) - ${1}" | tee -a "${scriptLog}"
 }
 
-
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Run command as logged-in user (thanks, @scriptingosx!)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
 function runAsUser() {
 
     updateScriptLog "Run \"$@\" as \"$loggedInUserID\" … "
@@ -97,12 +97,9 @@ function runAsUser() {
 
 }
 
-
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Reset Configuration
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
 function resetConfiguration() {
 
     updateScriptLog "Reset Configuration: ${1}"
@@ -118,10 +115,10 @@ function resetConfiguration() {
             # * https://github.com/macadmins/nudge/wiki/User-Deferrals#resetting-values-when-a-new-nudge-event-is-detected
             # * https://github.com/macadmins/nudge/wiki/User-Deferrals#testing-and-resetting-nudge
 
-            # echo "Reset User Preferences"
-            # rm -f /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
-            # pkill -l -U "${loggedInUser}" cfprefsd
-            # updateScriptLog "Removed User Preferences"
+            updateScriptLog "Reset User Preferences"
+            rm -f /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
+            pkill -l -U "${loggedInUser}" cfprefsd
+            updateScriptLog "Removed User Preferences"
 
             # Reset JSON
             updateScriptLog "Remove ${jsonPath} … "
@@ -221,38 +218,23 @@ function resetConfiguration() {
 }
 
 
-
 ####################################################################################################
 #
 # Program
 #
 ####################################################################################################
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Client-side Logging
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
 if [[ ! -f "${scriptLog}" ]]; then
     touch "${scriptLog}"
     updateScriptLog "*** Created log file ***"
 fi
 
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Logging preamble
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
 updateScriptLog "Nudge Post-install (${scriptVersion})"
 
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Reset Configuration
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
 resetConfiguration "${resetConfiguration}"
-
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -340,40 +322,17 @@ if [[ ! -f ${jsonPath} ]]; then
     },
     "osVersionRequirements": [
         {
+        "aboutUpdateURL_disabled": "${requiredAboutUpdateURL}",
         "aboutUpdateURLs": [
             {
             "_language": "en",
-            "aboutUpdateURL": "https://support.apple.com/en-us/HT211896#macos116"
-            }
-        ],
-        "majorUpgradeAppPath": "/Applications/Install macOS Big Sur.app",
-        "requiredInstallationDate": "${requiredBigSurInstallationDate}",
-        "requiredMinimumOSVersion": "${requiredBigSurMinimumOSVersion}",
-        "targetedOSVersionsRule": "11"
-        },
-        {
-        "aboutUpdateURLs": [
-            {
-            "_language": "en",
-            "aboutUpdateURL": "https://www.apple.com/macos/monterey/"
-            }
-        ],
-        "majorUpgradeAppPath": "/Applications/Install macOS Monterey.app",
-        "requiredInstallationDate": "${requiredMontereyInstallationDate}",
-        "requiredMinimumOSVersion": "${requiredMontereyMinimumOSVersion}",
-        "targetedOSVersionsRule": "12"
-        },
-        {
-        "aboutUpdateURLs": [
-            {
-            "_language": "en",
-            "aboutUpdateURL": "https://www.apple.com/macos/ventura/"
+            "aboutUpdateURL": "${requiredAboutUpdateURL}"
             }
         ],
         "majorUpgradeAppPath": "/Applications/Install macOS Ventura.app",
-        "requiredInstallationDate": "${requiredVenturaInstallationDate}",
-        "requiredMinimumOSVersion": "${requiredVenturaMinimumOSVersion}",
-        "targetedOSVersionsRule": "13"
+        "requiredInstallationDate": "${requiredInstallationDate}",
+        "requiredMinimumOSVersion": "${requiredMinimumOSVersion}",
+        "targetedOSVersionsRule": "${requiredTargetedOSVersionsRule}"
         }
     ],
     "userExperience": {
@@ -397,7 +356,6 @@ if [[ ! -f ${jsonPath} ]]; then
         "randomDelay": false
     },
     "userInterface": {
-        "actionButtonPath": "jamfselfservice://content?entity=policy&id=1&action=execute",
         "fallbackLanguage": "en",
         "forceFallbackLanguage": false,
         "forceScreenShotIcon": false,
@@ -411,20 +369,20 @@ if [[ ! -f ${jsonPath} ]]; then
         "updateElements": [
         {
             "_language": "en",
-            "actionButtonText": "actionButtonText",
-            "customDeferralButtonText": "customDeferralButtonText",
-            "customDeferralDropdownText": "customDeferralDropdownText",
-            "informationButtonText": "informationButtonText",
-            "mainContentHeader": "mainContentHeader",
-            "mainContentNote": "mainContentNote",
-            "mainContentSubHeader": "mainContentSubHeader",
-            "mainContentText": "mainContentText \n\nTo perform the update now, click \"actionButtonText,\" review the on-screen instructions by clicking \"More Info…\" then click \"Update Now.\" (Click screenshot below.)\n\nIf you are unable to perform this update now, click \"primaryQuitButtonText\" (which will no longer be visible once the ${deadline} deadline has passed).",
-            "mainHeader": "mainHeader",
-            "oneDayDeferralButtonText": "oneDayDeferralButtonText",
-            "oneHourDeferralButtonText": "oneHourDeferralButtonText",
-            "primaryQuitButtonText": "primaryQuitButtonText",
-            "secondaryQuitButtonText": "secondaryQuitButtonText",
-            "subHeader": "subHeader"
+            "actionButtonText": "Install & Reboot",
+            "customDeferralButtonText": "Custom",
+            "customDeferralDropdownText": "Defer",
+            "informationButtonText": "More Info",
+            "mainContentHeader": "The computer will reboot shortly after you select the ''Install & Reboot'' option.",
+            "mainContentNote": "Important Notes",
+            "mainContentSubHeader": "Updates can take around 30 minutes to complete.\nThis update requires at least 50% battery or connection to a power source.",
+            "mainContentText": "${requiredMainContentText}",
+            "mainHeader": "Install the latest macOS version",
+            "oneDayDeferralButtonText": "Postpone for One Day",
+            "oneHourDeferralButtonText": "Postpone for One Hour",
+            "primaryQuitButtonText": "Update Later",
+            "secondaryQuitButtonText": "I understand",
+            "subHeader": "${requiredSubHeader}"
         }
         ]
     }
@@ -454,6 +412,10 @@ if [[ ! -f ${launchAgentPath} ]]; then
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>AssociatedBundleIdentifiers</key>
+	<array>
+		<string>com.github.macadmins.Nudge</string>
+	</array>
     <key>Label</key>
     <string>${plistDomain}.Nudge.plist</string>
     <key>LimitLoadToSessionType</key>
