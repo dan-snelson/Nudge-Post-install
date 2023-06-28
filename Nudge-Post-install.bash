@@ -18,7 +18,7 @@
 
 ####################################################################################################
 #
-# Variables
+# Initial Variables Setup
 #
 ####################################################################################################
 
@@ -26,14 +26,14 @@
 # Global Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="1.0.0"
+scriptVersion="1.1.0"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
 loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }' )
-plistDomain="${4:-"org.corp.app"}"                                      # Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
+plistDomain="${4:-"org.corp.app"}"                                      # Reverse Domain Name Notation (i.e., "org.corp.app")
 
 resetConfiguration="${5:-"All"}"                                        # Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent |
 
-requiredInstallationDate="${6:-"2023-01-17T10:00:00Z"}"                 # Required macOS Installation Date & Time (i.e., 2023-01-17T10:00:00Z)
+requiredInstallationDate="${6:-"2025-12-31T23:23:23Z"}"                 # Required macOS Installation Date & Time (i.e., 2025-12-31T23:23:23Z)
 
 requiredMinimumOSVersion="${7:-"13.99"}"                                # Required macOS Minimum Version (i.e., 13.1)
 requiredTargetedOSVersionsRule="${8:-"13"}"
@@ -48,11 +48,11 @@ jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
 launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
 
-####################################################################################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Set deadline variable based on OS version
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-deadline="${requiredInstallationDate}"
-
-### Set deadline variable based on OS version
+# deadline="${requiredInstallationDate}"
 
 # osProductVersion=$( sw_vers -productVersion )
 # case "${osProductVersion}" in
@@ -73,34 +73,90 @@ else
 fi
 
 
-
 ####################################################################################################
 #
 # Functions
 #
 ####################################################################################################
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Client-side Script Logging
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 function updateScriptLog() {
+    # Client-side Script Logging
     echo -e "$( date +%Y-%m-%d\ %H:%M:%S ) - ${1}" | tee -a "${scriptLog}"
 }
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Run command as logged-in user (thanks, @scriptingosx!)
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 function runAsUser() {
-
+    # Run command as logged-in user (thanks, @scriptingosx!)
     updateScriptLog "Run \"$@\" as \"$loggedInUserID\" … "
     launchctl asuser "$loggedInUserID" sudo -u "$loggedInUser" "$@"
 
 }
 
+function killNudgeProcess(){
+    # Make sure Nudge stops running (in case aggresive mode may be active, or whether deadline has passed)
+    updateScriptLog "Stopping Nudge process..."
+    pkill -l -U "${loggedInUser}" nudge
+    updateScriptLog "Stopped Nudge process"
+
+}
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Reset Configuration
+# Reset Configurations
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+function resetLocalUserPreferences(){
+    # For testing only; see:
+    # * https://github.com/macadmins/nudge/wiki/User-Deferrals#resetting-values-when-a-new-nudge-event-is-detected
+    # * https://github.com/macadmins/nudge/wiki/User-Deferrals#testing-and-resetting-nudge
+
+    updateScriptLog "Removing User Preferences (/Users/${loggedInUser}/Library/Preferences/${plistDomain}.Nudge.plist)"
+    rm -f /Users/"${loggedInUser}"/Library/Preferences/"${plistDomain}".Nudge.plist 2>&1
+    updateScriptLog "Stopping Core Foundation Preferences daemon … "
+    pkill -l -U "${loggedInUser}" cfprefsd
+    updateScriptLog "Removed User Preferences"
+}
+
+function resetLocalJSON(){
+    updateScriptLog "Removing ${jsonPath} … "
+    rm -f "${jsonPath}" 2>&1
+    updateScriptLog "Removed ${jsonPath}"
+}
+
+function resetLaunchAgent(){
+    updateScriptLog "Unloading ${launchAgentPath} … "
+    runAsUser launchctl unload -w "${launchAgentPath}" 2>&1
+    updateScriptLog "Removing ${launchAgentPath} … "
+    rm -f "${launchAgentPath}" 2>&1
+    updateScriptLog "Removed ${launchAgentPath}"
+}
+
+function resetLaunchDaemon(){
+    updateScriptLog "Unloading ${launchDaemonPath} … "
+    /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
+    updateScriptLog "Removing ${launchDaemonPath} … "
+    rm -f "${launchDaemonPath}" 2>&1
+    updateScriptLog "Removed ${launchDaemonPath}"
+}
+
+function hideNudgeInFinder(){
+    updateScriptLog "Hiding Nudge in Finder … "
+    chflags hidden "/Applications/Utilities/Nudge.app" 
+    updateScriptLog "Hid Nudge in Finder"
+}
+
+function hideNudgeInLaunchpad(){
+    updateScriptLog "Hiding Nudge in Launchpad … "
+    if [[ -z "$loggedInUser" ]]; then
+        updateScriptLog "Did not detect logged-in user"
+    else
+        sqlite3 $(sudo find /private/var/folders \( -name com.apple.dock.launchpad -a -user ${loggedInUser} \) 2> /dev/null)/db/db "DELETE FROM apps WHERE title='Nudge';"
+        killall Dock
+        updateScriptLog "Hid Nudge in Launchpad for ${loggedInUser}"
+    fi
+}
+
 function resetConfiguration() {
+
+    killNudgeProcess
 
     updateScriptLog "Reset Configuration: ${1}"
 
@@ -110,49 +166,12 @@ function resetConfiguration() {
             # Reset JSON, LaunchAgent, LaunchDaemon, Hide Nudge
             updateScriptLog "Reset All Configuration Files … "
 
-            # Reset User Preferences
-            # For testing only; see:
-            # * https://github.com/macadmins/nudge/wiki/User-Deferrals#resetting-values-when-a-new-nudge-event-is-detected
-            # * https://github.com/macadmins/nudge/wiki/User-Deferrals#testing-and-resetting-nudge
-
-            updateScriptLog "Reset User Preferences"
-            rm -f /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
-            pkill -l -U "${loggedInUser}" cfprefsd
-            updateScriptLog "Removed User Preferences"
-
-            # Reset JSON
-            updateScriptLog "Remove ${jsonPath} … "
-            rm -f "${jsonPath}" 2>&1
-            updateScriptLog "Removed ${jsonPath}"
-
-            # Reset LaunchAgent
-            updateScriptLog "Unload ${launchAgentPath} … "
-            runAsUser launchctl unload -w "${launchAgentPath}" 2>&1
-            updateScriptLog "Remove ${launchAgentPath} … "
-            rm -f "${launchAgentPath}" 2>&1
-            updateScriptLog "Removed ${launchAgentPath}"
-
-            # Reset LaunchDaemon
-            updateScriptLog "Unload ${launchDaemonPath} … "
-            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
-            updateScriptLog "Remove ${launchDaemonPath} … "
-            rm -f "${launchDaemonPath}" 2>&1
-            updateScriptLog "Removed ${launchDaemonPath}"
-
-            # Hide Nudge in Finder
-            updateScriptLog "Hide Nudge in Finder … "
-            chflags hidden "/Applications/Utilities/Nudge.app" 
-            updateScriptLog "Hid Nudge in Finder"
-
-            # Hide Nudge in Launchpad
-            updateScriptLog "Hide Nudge in Launchpad … "
-            if [[ -z "$loggedInUser" ]]; then
-                updateScriptLog "Did not detect logged-in user"
-            else
-                sqlite3 $(sudo find /private/var/folders \( -name com.apple.dock.launchpad -a -user ${loggedInUser} \) 2> /dev/null)/db/db "DELETE FROM apps WHERE title='Nudge';"
-                killall Dock
-                updateScriptLog "Hid Nudge in Launchpad for ${loggedInUser}"
-            fi
+            resetLocalUserPreferences
+            resetLocalJSON
+            resetLaunchAgent
+            resetLaunchDaemon
+            hideNudgeInFinder
+            hideNudgeInLaunchpad
 
             updateScriptLog "Reset All Configuration Files"
             ;;
@@ -161,21 +180,9 @@ function resetConfiguration() {
            # Uninstall Nudge Post-install
             updateScriptLog "Uninstalling Nudge Post-install … "
 
-            # Uninstall JSON
-            rm -f "${jsonPath}"
-            updateScriptLog "Uninstalled ${jsonPath}"
-
-            # Uninstall LaunchAgent
-            updateScriptLog "Unload ${launchAgentPath} … "
-            runAsUser launchctl unload -w "${launchAgentPath}"
-            rm -f "${launchAgentPath}"
-            updateScriptLog "Uninstalled ${launchAgentPath}"
-
-            # Uninstall LaunchDaemon
-            updateScriptLog "Unload ${launchDaemonPath} … "
-            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
-            rm -f "${launchDaemonPath}"
-            updateScriptLog "Uninstalled ${launchDaemonPath}"
+            resetLocalJSON
+            resetLaunchAgent
+            resetLaunchDaemon
 
             # Exit
             updateScriptLog "Uninstalled all Nudge Post-install configuration files"
@@ -185,27 +192,16 @@ function resetConfiguration() {
 
         "JSON" )
             # Reset JSON
-            updateScriptLog "Remove ${jsonPath} … "
-            rm -f "${jsonPath}"
-            updateScriptLog "Removed ${jsonPath}"
+            resetLocalJSON
             ;;
 
         "LaunchAgent" )
             # Reset LaunchAgent
-            updateScriptLog "Unload ${launchAgentPath} … "
-            runAsUser launchctl unload -w "${launchAgentPath}"
-            updateScriptLog "Remove ${launchAgentPath} … "
-            rm -f "${launchAgentPath}"
-            updateScriptLog "Removed ${launchAgentPath}"
+            resetLaunchAgent
             ;;
 
         "LaunchDaemon" )
-            # Reset LaunchDaemon
-            updateScriptLog "Unload ${launchDaemonPath} … "
-            /bin/launchctl unload -w "${launchDaemonPath}" 2>&1
-            updateScriptLog "Remove ${launchDaemonPath} … "
-            rm -f "${launchDaemonPath}"
-            updateScriptLog "Removed ${launchDaemonPath}"
+            resetLaunchDaemon
             ;;
 
         * )
@@ -307,8 +303,8 @@ if [[ ! -f ${jsonPath} ]]; then
         ],
         "acceptableCameraUsage": false,
         "acceptableScreenSharingUsage": false,
-        "aggressiveUserExperience": true,
-        "aggressiveUserFullScreenExperience": true,
+        "aggressiveUserExperience": false,
+        "aggressiveUserFullScreenExperience": false,
         "asynchronousSoftwareUpdate": true,
         "attemptToFetchMajorUpgrade": true,
         "attemptToBlockApplicationLaunches": true,
@@ -375,7 +371,7 @@ if [[ ! -f ${jsonPath} ]]; then
             "informationButtonText": "More Info",
             "mainContentHeader": "The computer will reboot shortly after you select the ''Install & Reboot'' option.",
             "mainContentNote": "Important Notes",
-            "mainContentSubHeader": "Updates can take around 30 minutes to complete.\nThis update requires at least 50% battery or connection to a power source.",
+            "mainContentSubHeader": "Updates can take around 30 minutes to complete.\nThis update requires at least 50% battery or connection to a power source.\nRequired Installation Date: ${requiredInstallationDate}",
             "mainContentText": "${requiredMainContentText}",
             "mainHeader": "Install the latest macOS version",
             "oneDayDeferralButtonText": "Postpone for One Day",
