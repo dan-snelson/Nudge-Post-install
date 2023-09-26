@@ -2,19 +2,15 @@
 
 ####################################################################################################
 #
-#    Nudge Post-install
+#   Nudge Post-install
 #
-#    Purpose: Configures Nudge to company standards post-install
-#    https://github.com/dan-snelson/Nudge-Post-install/wiki
+#   Purpose: Configures Nudge to company standards post-install
+#   https://github.com/dan-snelson/Nudge-Post-install/wiki
 #
-####################################################################################################
-#
-#  Based on version 0.0.17, 03-Jan-2023, Dan K. Snelson (@dan-snelson)
-#  - Updates for Nudge [`1.1.10`](https://github.com/macadmins/nudge/pull/435)
+#   Based on version 0.0.17, 03-Jan-2023, Dan K. Snelson (@dan-snelson)
+#   Updates for Nudge [`1.1.10`](https://github.com/macadmins/nudge/pull/435)
 #
 ####################################################################################################
-
-
 
 ####################################################################################################
 #
@@ -23,43 +19,64 @@
 ####################################################################################################
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Jamf Parameter Labels
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+## Reverse Domain Name Notation (i.e., "org.corp.app")
+plistDomain="${4:-"org.corp.app"}"               
+
+## Configuration Files to Reset (i.e., All | JSON | LaunchAgent | LaunchDaemon | none (blank))
+resetConfiguration="${5:-"All"}"
+
+## Required macOS Installation Date & Time (i.e., 2023-01-17T10:00:00Z) - use Z at the end for UTC time, otherwise local time will be used
+requiredInstallationDate="${6:-"2025-12-31T23:23:23Z"}"
+
+## Required TargetedOSVersionsRule
+requiredTargetedOSVersionsRule="${7:-"14"}"
+## See for reference:
+## https://github.com/macadmins/nudge/wiki/osVersionRequirements#targetedosversionsrule---type-string-default-value--required-no
+## https://github.com/macadmins/nudge/wiki/targetedOSVersionsRule
+
+## Required AboutUpdateURL
+requiredAboutUpdateURL="${8:-"aboutUpdateURL"}"
+## See for reference:
+## https://github.com/macadmins/nudge/wiki/osVersionRequirements#aboutupdateurl---type-string-default-value-none-required-no
+## https://github.com/macadmins/nudge/wiki/aboutUpdateURLs
+
+## Required MainContentText
+requiredMainContentText="${9:-"mainContentText"}"
+## See for reference:
+## https://github.com/macadmins/nudge/wiki/updateElements#maincontenttext---type-string-default-value-
+
+## Required SubHeader
+requiredSubHeader="${10:-"subHeader"}"
+## See for reference:
+## https://github.com/macadmins/nudge/wiki/updateElements#subheader---type-string-default-value-
+
+## Required ForceDownloadURL
+requiredForceDownloadURL="${11:-"https://swcdn.apple.com/content/downloads/26/09/042-58988-A_114Q05ZS90/yudaal746aeavnzu5qdhk26uhlphm3r79u/InstallAssistant.pkg"}"
+# 14.0 URL used above
+## See for reference:
+## https://mrmacintosh.com/macos-sonoma-full-installer-database-download-directly-from-apple/
+## https://www.apple.com/newsroom/2023/09/macos-sonoma-is-available-today/
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Global Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="1.1.0"
+scriptVersion="1.2.0"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
 loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }' )
-plistDomain="${4:-"org.corp.app"}"                                      # Reverse Domain Name Notation (i.e., "org.corp.app")
 
-resetConfiguration="${5:-"All"}"                                        # Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent |
-
-requiredInstallationDate="${6:-"2025-12-31T23:23:23Z"}"                 # Required macOS Installation Date & Time (i.e., 2025-12-31T23:23:23Z)
-
-requiredMinimumOSVersion="${7:-"13.99"}"                                # Required macOS Minimum Version (i.e., 13.1)
-requiredTargetedOSVersionsRule="${8:-"13"}"
-
-requiredAboutUpdateURL="${9:-"aboutUpdateURL"}"
-
-requiredMainContentText="${10:-"mainContentText"}"
-requiredSubHeader="${11:-"subHeader"}"
+requiredMinimumOSInstallerFilename="Install macOS Sonoma.app"
+requiredMinimumOSVersion="14.0"
+requiredMinimumOSInstallerVersion="19.0.02"
+shouldForceDownload=false
 
 scriptLog="/var/log/${plistDomain}.NudgePostInstall.log"
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
 launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Set deadline variable based on OS version
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# deadline="${requiredInstallationDate}"
-
-# osProductVersion=$( sw_vers -productVersion )
-# case "${osProductVersion}" in
-#     11* ) deadline="${requiredBigSurInstallationDate}"    ;;
-#     12* ) deadline="${requiredMontereyInstallationDate}"  ;;
-#     13* ) deadline="${requiredVenturaInstallationDate}"   ;;
-# esac
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Validate logged-in user
@@ -72,6 +89,12 @@ else
     loggedInUserID=$(id -u "${loggedInUser}")
 fi
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Validate force macOS download
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+if [[ "$requiredForceDownloadURL" != "" ]] ; then
+    shouldForceDownload=true
+fi
 
 ####################################################################################################
 #
@@ -86,7 +109,7 @@ function updateScriptLog() {
 
 function runAsUser() {
     # Run command as logged-in user (thanks, @scriptingosx!)
-    updateScriptLog "Run \"$@\" as \"$loggedInUserID\" … "
+    updateScriptLog "Run command \"$@\" as \"$loggedInUserID\" … "
     launchctl asuser "$loggedInUserID" sudo -u "$loggedInUser" "$@"
 
 }
@@ -98,6 +121,56 @@ function killNudgeProcess(){
     updateScriptLog "Stopped Nudge process"
 
 }
+
+function forceDownloadLatestUpgrade(){
+    updateScriptLog "Clearing InstallAssistant.pkg from any previous download attempts"
+    if [[ -f "/tmp/InstallAssistant.pkg" ]]; then
+        rm -rf "/tmp/InstallAssistant.pkg" 2>&1
+    fi
+
+    updateScriptLog "Downloading InstallAssistant.pkg from this URL: $requiredForceDownloadURL"
+    curl "$requiredForceDownloadURL" -o /tmp/InstallAssistant.pkg
+
+    updateScriptLog "Installing InstallAssistant.pkg to extract $requiredMinimumOSInstallerFilename"
+    installer -verbose -pkg /tmp/InstallAssistant.pkg -target /
+
+}
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Make sure that version found in /Applications/Install macOS xxx.app matches $requiredMinimumOSInstallerVersion
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+function validateOSInstallerVersion(){
+	if [[ -f "/Applications/${requiredMinimumOSInstallerFilename}" ]]; then
+        
+        OSInstallerVersion=$(defaults read "/Applications/${requiredMinimumOSInstallerFilename}/Contents/Info" CFBundleShortVersionString)
+        
+        if [[ "$OSInstallerVersion" != "$requiredMinimumOSInstallerVersion" ]]; then
+            updateScriptLog "Found a mismatch on '${requiredMinimumOSInstallerFilename}' installer version."
+            updateScriptLog "Removing ${requiredMinimumOSInstallerFilename}..."
+            rm -rf "/Applications/${requiredMinimumOSInstallerFilename}" 2>&1
+            updateScriptLog "Removed ${requiredMinimumOSInstallerFilename}"
+
+        else
+            updateScriptLog "Found that '${requiredMinimumOSInstallerFilename}' installer version currently matches '${requiredMinimumOSInstallerVersion}'."
+            updateScriptLog "Installer looks good."
+        fi
+    else
+    	updateScriptLog "The installer /Applications/${requiredMinimumOSInstallerFilename} for the required OS version ${requiredMinimumOSVersion} does not exist."
+        updateScriptLog "It may have never been downloaded before, or it may have been previously deleted."
+        updateScriptLog "Please note previous major upgrade installers won't get removed, only minor update ones."
+    fi
+
+    updateScriptLog "Should force download macOS $requiredMinimumOSVersion ?? Jamf Policy Input: ${shouldForceDownload}"
+    if shouldForceDownload ; then
+        forceDownloadLatestUpgrade
+    else
+        updateScriptLog "Allowing Nudge LaunchAgent to trigger softwareUpdate on its own to download the correct installer instead."
+    fi
+}
+
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Reset Configurations
@@ -227,11 +300,10 @@ if [[ ! -f "${scriptLog}" ]]; then
 fi
 
 # Logging preamble
-updateScriptLog "Nudge Post-install (${scriptVersion})"
+updateScriptLog "Nudge Post-install modified by @lapc506 - version: (${scriptVersion})"
 
 # Reset Configuration
 resetConfiguration "${resetConfiguration}"
-
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Nudge Logger LaunchDaemon
@@ -325,7 +397,7 @@ if [[ ! -f ${jsonPath} ]]; then
             "aboutUpdateURL": "${requiredAboutUpdateURL}"
             }
         ],
-        "majorUpgradeAppPath": "/Applications/Install macOS Ventura.app",
+        "majorUpgradeAppPath": "/Applications/${requiredMinimumOSInstallerFilename}",
         "requiredInstallationDate": "${requiredInstallationDate}",
         "requiredMinimumOSVersion": "${requiredMinimumOSVersion}",
         "targetedOSVersionsRule": "${requiredTargetedOSVersionsRule}"
@@ -377,7 +449,7 @@ if [[ ! -f ${jsonPath} ]]; then
             "oneDayDeferralButtonText": "Postpone for One Day",
             "oneHourDeferralButtonText": "Postpone for One Hour",
             "primaryQuitButtonText": "Update Later",
-            "secondaryQuitButtonText": "I understand",
+            "secondaryQuitButtonText": "Deferral Options",
             "subHeader": "${requiredSubHeader}"
         }
         ]
@@ -476,6 +548,8 @@ else
     runAsUser launchctl unload -w "${launchAgentPath}"
     # Kill Nudge just in case (say someone manually opens it and not launched via LaunchAgent
     killall Nudge
+    # Validate to Make sure that version found in /Applications/Install macOS xxx.app matches $requiredMinimumOSInstallerVersion
+    validateOSInstallerVersion
     # Load the LaunchAgent
     runAsUser launchctl load -w "${launchAgentPath}"
 fi
