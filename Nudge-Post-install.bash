@@ -7,8 +7,10 @@
 #   Purpose: Configures Nudge to company standards post-install
 #   https://github.com/dan-snelson/Nudge-Post-install/wiki
 #
-#   Based on version 0.0.17, 03-Jan-2023, Dan K. Snelson (@dan-snelson)
-#   Updates for Nudge [`1.1.10`](https://github.com/macadmins/nudge/pull/435)
+#   Original author:
+#   Dan K. Snelson (@dan-snelson)
+#   Nudge Updates:
+#   see notes for version [`1.1.10`](https://github.com/macadmins/nudge/pull/435)
 #
 ####################################################################################################
 
@@ -64,7 +66,7 @@ requiredForceDownloadURL="${11:-"https://swcdn.apple.com/content/downloads/26/09
 # Global Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="1.2.0"
+scriptVersion="18.0.0"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
 loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }' )
 
@@ -300,7 +302,7 @@ if [[ ! -f "${scriptLog}" ]]; then
 fi
 
 # Logging preamble
-updateScriptLog "Nudge Post-install modified by @lapc506 - version: (${scriptVersion})"
+updateScriptLog "Nudge Post-install - version: (${scriptVersion})"
 
 # Reset Configuration
 resetConfiguration "${resetConfiguration}"
