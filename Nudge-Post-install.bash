@@ -9,10 +9,95 @@
 #
 ####################################################################################################
 #
-# Version 0.0.18, 16-Mar-2023, Dan K. Snelson (@dan-snelson)
-#   - Set `majorUpgradeAppPath` to `/System/Library/CoreServices/Software Update.app`
-#   - Set `disableSoftwareUpdateWorkflow` to `true`
-#   - Updated `launchctl` load / unload commands
+# HISTORY
+#
+#     Version 0.0.1, 19-Mar-2021, Dan K. Snelson (@dan-snelson)
+#        Original version
+#
+#    Version 0.0.2, 20-Mar-2021, Dan K. Snelson (@dan-snelson)
+#        Leveraged additional Script Parameters
+#        Added "Reset" function
+#
+#    Version 0.0.3, 22-Apr-2021, Dan K. Snelson (@dan-snelson)
+#        Updated for macOS Big Sur 11.3
+#        Fix imminentRefreshCycle typo
+#
+#    Version 0.0.4, 03-May-2021, Dan K. Snelson (@dan-snelson)
+#        Updated for macOS Big Sur 11.3.1
+#
+#    Version 0.0.5, 18-May-2021, Dan K. Snelson (@dan-snelson)
+#        Updated for macOS Big Sur 11.4
+#        Updated for long installation times
+#
+#    Version 0.0.6, 22-Jul-2021, Dan K. Snelson (@dan-snelson)
+#        Updated for macOS Big Sur 11.5
+#        Updated for Opt-in Beta Testers
+#
+#    Version 0.0.7, 18-Aug-2021, Dan K. Snelson (@dan-snelson)
+#        Updated for Nudge 1.1.0
+#
+#    Version 0.0.8, 23-Aug-2021, Dan K. Snelson (@dan-snelson)
+#        Updated for `targetedOSVersionRule` https://github.com/macadmins/nudge/pull/225
+#
+#    Version 0.0.9, 12-Oct-2021, Dan K. Snelson (@dan-snelson)
+#        Added check for logged-in user before attempting to hide Nudge in Launchpad. (Thanks for the feedback and testing, @Jotai)
+#        Compared "Nudge JSON client-side" code to "Nudge / Example Assets / com.github.macadmins.Nudge.json"
+#        https://github.com/macadmins/nudge/blob/main/Example%20Assets/com.github.macadmins.Nudge.json
+#
+#    Version 0.0.10, 19-Oct-2021, Dan K. Snelson (@dan-snelson)
+#        Enforce latest version on both macOS Monterey and macOS Big Sur
+#        See: https://github.com/macadmins/nudge/wiki/targetedOSVersionsRule#real-world-example-2
+#
+#    Version 0.0.11, 21-Jan-2022, Dan K. Snelson (@dan-snelson)
+#        Updates for "asynchronousSoftwareUpdate"
+#        See: https://github.com/macadmins/nudge/issues/294
+#
+#    Version 0.0.12, 10-Feb-2022, Dan K. Snelson (@dan-snelson)
+#        Updates for "disableSoftwareUpdateWorkflow"
+#        See: https://github.com/macadmins/nudge/issues/302
+#
+#    Version 0.0.13, 15-Mar-2022, Dan K. Snelson (@dan-snelson)
+#        Updates for Grace Periods for newly provisioned machines
+#        See: https://github.com/macadmins/nudge/commit/67088d0648bc038c71dc80aba85d1ec193f87534
+#
+#   Version 0.0.14, 16-May-2022, Dan K. Snelson (@dan-snelson)
+#       Updates for Nudge 1.1.6.81352
+#
+#   Version 0.0.15, 18-May-2022, Dan K. Snelson (@dan-snelson)
+#       Updates for Nudge 1.1.7.81380
+#
+#   Version 0.0.16, 03-Jun-2022, Dan K. Snelson (@dan-snelson)
+#       Updates for Nudge 1.1.7.81411
+#
+#   Version 0.0.16, 21-Oct-2022, Dan K. Snelson (@dan-snelson)
+#       **BREAKING CHANGES**
+#           - Reordered Script Parameters
+#           - Added default values (for when Script Parameters are left blank in a Jamf Pro policy)
+#       Removed `authorizationCheck` function
+#       Added macOS Ventura settings
+#       Replaced `scriptResult` with `updateScriptLog`
+#       Random clean-up
+#
+#   Version 0.0.17, 03-Jan-2023, Dan K. Snelson (@dan-snelson)
+#       - Updates for Nudge [`1.1.10`](https://github.com/macadmins/nudge/pull/435)
+#
+#   Version 0.0.18, 11-Jan-2023, Dan K. Snelson (@dan-snelson)
+#       - Set `majorUpgradeAppPath` to  `/System/Library/CoreServices/Software Update.app`
+#
+#   Version 0.0.19, 09-Feb-2023, Dan K. Snelson (@dan-snelson)
+#       - Set `disableSoftwareUpdateWorkflow` to `true`
+#
+#   Version 0.0.20, 16-Mar-2023, Dan K. Snelson (@dan-snelson)
+#       - Updated `launchctl` load / unload commands
+#
+#   Version 0.0.21, 02-May-2023, Dan K. Snelson (@dan-snelson)
+#       - Disabled `asynchronousSoftwareUpdate` and `attemptToFetchMajorUpgrade`
+#
+#   Version 0.0.22, 27-Sep-2023, Dan K. Snelson (@dan-snelson)
+#       - Added new `calendarDeferralUnit` key from Nudge 1.1.12.81501
+#       - 🔥 **Breaking Change** for users of Nudge Post-install prior to `0.0.22` 🔥 
+#           - Replaced multiple `required___InstallationDate` variables with a single `deadline`
+#           - Updated Script Parameters
 #
 ####################################################################################################
 
@@ -28,34 +113,20 @@
 # Global Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="0.0.18-rc1"
+scriptVersion="0.0.22-rc1"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }' )
-plistDomain="${4:-"org.churchofjesuschrist"}"                       # Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
-resetConfiguration="${5:-"All"}"                                    # Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
-requiredBigSurMinimumOSVersion="${6:-"11.99"}"                      # Required macOS Big Sur Minimum Version (i.e., 11.7.4)
-requiredBigSurInstallationDate="${7:-"2023-02-14T10:00:00Z"}"       # Required macOS Big SurInstallation Date & Time (i.e., 2023-03-17T10:00:00Z)
-requiredMontereyMinimumOSVersion="${8:-"12.99"}"                    # Required macOS Monterey Minimum Version (i.e., 12.6.3)
-requiredMontereyInstallationDate="${9:-"2023-02-14T10:00:00Z"}"     # Required macOS Monterey Installation Date & Time (i.e., 2023-03-17T10:00:00Z)
-requiredVenturaMinimumOSVersion="${10:-"13.99"}"                    # Required macOS Ventura Minimum Version (i.e., 13.2.1)
-requiredVenturaInstallationDate="${11:-"2023-02-14T10:00:00Z"}"     # Required macOS Ventura Installation Date & Time (i.e., 2023-03-17T10:00:00Z)
+plistDomain="${4:-"org.churchofjesuschrist"}"        # Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
+resetConfiguration="${5:-"All"}"                     # Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
+deadline="${6:-"2023-10-24T23:00:00Z"}"              # Required Installation Date & Time (i.e., 2023-03-17T10:00:00Z)
+requiredBigSurMinimumOSVersion="${7:-"11.99"}"       # Required macOS Big Sur Minimum Version (i.e., 11.7.10)
+requiredMontereyMinimumOSVersion="${8:-"12.99"}"     # Required macOS Monterey Minimum Version (i.e., 12.7)
+requiredVenturaMinimumOSVersion="${9:-"13.99"}"      # Required macOS Ventura Minimum Version (i.e., 13.6)
+requiredSonomaMinimumOSVersion="${10:-"14.99"}"      # Required macOS Sonoma Minimum Version (i.e., 14.0.1)
 scriptLog="/var/log/${plistDomain}.log"
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
 launchDaemonPath="/Library/LaunchDaemons/${plistDomain}.Nudge.logger.plist"
-
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Set deadline variable based on OS version
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-osProductVersion=$( sw_vers -productVersion )
-case "${osProductVersion}" in
-    11* ) deadline="${requiredBigSurInstallationDate}"    ;;
-    12* ) deadline="${requiredMontereyInstallationDate}"  ;;
-    13* ) deadline="${requiredVenturaInstallationDate}"   ;;
-esac
 
 
 
@@ -79,7 +150,7 @@ fi
 ####################################################################################################
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Client-side Script Logging
+# Client-side Script Logging (thanks, @smithjw!)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 function updateScriptLog() {
@@ -120,10 +191,10 @@ function resetConfiguration() {
             # * https://github.com/macadmins/nudge/wiki/User-Deferrals#resetting-values-when-a-new-nudge-event-is-detected
             # * https://github.com/macadmins/nudge/wiki/User-Deferrals#testing-and-resetting-nudge
 
-            # echo "Reset User Preferences"
-            # rm -f /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
-            # pkill -l -U "${loggedInUser}" cfprefsd
-            # updateScriptLog "Removed User Preferences"
+            echo "Reset User Preferences"
+            rm -f /Users/"${loggedInUser}"/Library/Preferences/com.github.macadmins.Nudge.plist
+            pkill -l -U "${loggedInUser}" cfprefsd
+            updateScriptLog "Removed User Preferences"
 
             # Reset JSON
             updateScriptLog "Remove ${jsonPath} … "
@@ -329,8 +400,8 @@ if [[ ! -f ${jsonPath} ]]; then
         "acceptableScreenSharingUsage": true,
         "aggressiveUserExperience": true,
         "aggressiveUserFullScreenExperience": true,
-        "asynchronousSoftwareUpdate": true,
-        "attemptToFetchMajorUpgrade": true,
+        "asynchronousSoftwareUpdate": false,
+        "attemptToFetchMajorUpgrade": false,
         "attemptToBlockApplicationLaunches": true,
         "blockedApplicationBundleIDs": [
             "com.apple.ColorSyncUtility",
@@ -349,7 +420,7 @@ if [[ ! -f ${jsonPath} ]]; then
             }
         ],
         "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
-        "requiredInstallationDate": "${requiredBigSurInstallationDate}",
+        "requiredInstallationDate": "${deadline}",
         "requiredMinimumOSVersion": "${requiredBigSurMinimumOSVersion}",
         "targetedOSVersionsRule": "11"
         },
@@ -361,7 +432,7 @@ if [[ ! -f ${jsonPath} ]]; then
             }
         ],
         "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
-        "requiredInstallationDate": "${requiredMontereyInstallationDate}",
+        "requiredInstallationDate": "${deadline}",
         "requiredMinimumOSVersion": "${requiredMontereyMinimumOSVersion}",
         "targetedOSVersionsRule": "12"
         },
@@ -373,9 +444,21 @@ if [[ ! -f ${jsonPath} ]]; then
             }
         ],
         "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
-        "requiredInstallationDate": "${requiredVenturaInstallationDate}",
+        "requiredInstallationDate": "${deadline}",
         "requiredMinimumOSVersion": "${requiredVenturaMinimumOSVersion}",
         "targetedOSVersionsRule": "13"
+        },
+        {
+        "aboutUpdateURLs": [
+            {
+            "_language": "en",
+            "aboutUpdateURL": "https://servicenow.churchofjesuschrist.org/support?id=kb_article_view&sysparm_article=KB0054571"
+            }
+        ],
+        "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
+        "requiredInstallationDate": "${deadline}",
+        "requiredMinimumOSVersion": "${requiredSonomaMinimumOSVersion}",
+        "targetedOSVersionsRule": "14"
         }
     ],
     "userExperience": {
@@ -386,6 +469,7 @@ if [[ ! -f ${jsonPath} ]]; then
         "allowedDeferralsUntilForcedSecondaryQuitButton": 14,
         "approachingRefreshCycle": 6000,
         "approachingWindowTime": 72,
+        "calendarDeferralUnit": "imminentWindowTime",
         "elapsedRefreshCycle": 300,
         "gracePeriodInstallDelay": 23,
         "gracePeriodLaunchDelay": 1,

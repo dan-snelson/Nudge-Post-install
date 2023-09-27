@@ -1,10 +1,27 @@
 # CHANGELOG
 
-## 0.0.18
+## 0.0.22
+### 27-Sep-2023
+> :warning: **BREAKING CHANGE**
+>   - Reordered Script Parameters
+>       - Replaced multiple `required___InstallationDate` variables with a single `deadline`
+- Added new `calendarDeferralUnit` key from Nudge `1.1.12.81501`
+
+## 0.0.21
+### 02-May-2023
+- Disabled `asynchronousSoftwareUpdate` and `attemptToFetchMajorUpgrade`
+
+## 0.0.20
 ### 16-Mar-2023
-- Set `majorUpgradeAppPath` to `/System/Library/CoreServices/Software Update.app`
-- Set `disableSoftwareUpdateWorkflow` to `true`
 - Updated `launchctl` load / unload commands
+
+## 0.0.19
+### 09-Feb-2023
+- Set `disableSoftwareUpdateWorkflow` to `true`
+
+## 0.0.18
+### 11-Jan-2023
+- Set `majorUpgradeAppPath` to  `/System/Library/CoreServices/Software Update.app`
 
 ## 0.0.17
 ### 03-Jan-2023
