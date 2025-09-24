@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.0.24
+### 24-Sep-2026
+- Added macOS Tahoma 26 settings
+
+## 0.0.23
+### 17-Sep-2024
+- Added macOS Sequoia 15 settings
+
 ## 0.0.22
 ### 27-Sep-2023
 > :warning: **BREAKING CHANGE**

@@ -102,6 +102,9 @@
 #   Version 0.0.23, 17-Sep-2024, Dan K. Snelson (@dan-snelson)
 #       - Added macOS Sequoia settings
 #
+#   Version 0.0.24, 24-Sep-2024, Dan K. Snelson (@dan-snelson)
+#       - Added macOS Sequoia settings
+#
 ####################################################################################################
 
 
@@ -116,17 +119,18 @@
 # Global Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="0.0.23-b1"
+scriptVersion="0.0.24b1"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }' )
 plistDomain="${4:-"org.churchofjesuschrist"}"        # Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
 resetConfiguration="${5:-"All"}"                     # Configuration Files to Reset (i.e., None (blank) | All | JSON | LaunchAgent | LaunchDaemon)
-deadline="${6:-"2024-09-24T23:00:00Z"}"              # Required Installation Date & Time (i.e., 2023-03-17T10:00:00Z)
-requiredBigSurMinimumOSVersion="${7:-"11.99"}"       # Required macOS Big Sur Minimum Version (i.e., 11.7.10)
-requiredMontereyMinimumOSVersion="${8:-"12.99"}"     # Required macOS Monterey Minimum Version (i.e., 12.7.6)
-requiredVenturaMinimumOSVersion="${9:-"13.99"}"      # Required macOS Ventura Minimum Version (i.e., 13.7)
-requiredSonomaMinimumOSVersion="${10:-"14.99"}"      # Required macOS Sonoma Minimum Version (i.e., 14.7)
-requiredSequoiaMinimumOSVersion="${11:-"15.99"}"     # Required macOS Sequoia Minimum Version (i.e., 15.0)
+deadline="${6:-"2025-10-17T23:00:00Z"}"              # Required Installation Date & Time (i.e., 2025-10-17T23:00:00Z)
+# requiredBigSurMinimumOSVersion="${7:-"11.99"}"     # Required macOS Big Sur Minimum Version (i.e., 11.7.10)
+requiredMontereyMinimumOSVersion="${7:-"12.99"}"     # Required macOS Monterey 12 Minimum Version (i.e., 12.7.6)
+requiredVenturaMinimumOSVersion="${8:-"13.99"}"      # Required macOS Ventura 13 Minimum Version (i.e., 13.7.8)
+requiredSonomaMinimumOSVersion="${9:-"14.99"}"       # Required macOS Sonoma 14 Minimum Version (i.e., 14.8)
+requiredSequoiaMinimumOSVersion="${10:-"15.99"}"     # Required macOS Sequoia 15 Minimum Version (i.e., 15.7.1)
+requiredTahomaMinimumOSVersion="${11:-"26.99"}"      # Required macOS Tahoma 26 Minimum Version (i.e., 26.1)
 scriptLog="/var/log/${plistDomain}.log"
 jsonPath="/Library/Preferences/${plistDomain}.Nudge.json"
 launchAgentPath="/Library/LaunchAgents/${plistDomain}.Nudge.plist"
@@ -420,19 +424,19 @@ if [[ ! -f ${jsonPath} ]]; then
         "aboutUpdateURLs": [
             {
             "_language": "en",
-            "aboutUpdateURL": "https://support.apple.com/en-us/106338"
+            "aboutUpdateURL": "https://support.apple.com/en-us/108382"
             }
         ],
         "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
         "requiredInstallationDate": "${deadline}",
-        "requiredMinimumOSVersion": "${requiredBigSurMinimumOSVersion}",
+        "requiredMinimumOSVersion": "${requiredMontereyMinimumOSVersion}",
         "targetedOSVersionsRule": "11"
         },
         {
         "aboutUpdateURLs": [
             {
             "_language": "en",
-            "aboutUpdateURL": "https://support.apple.com/en-us/106339"
+            "aboutUpdateURL": "https://support.apple.com/en-us/108382"
             }
         ],
         "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
@@ -444,7 +448,7 @@ if [[ ! -f ${jsonPath} ]]; then
         "aboutUpdateURLs": [
             {
             "_language": "en",
-            "aboutUpdateURL": "https://support.apple.com/en-us/106337"
+            "aboutUpdateURL": "https://support.apple.com/en-us/108382"
             }
         ],
         "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
@@ -456,7 +460,7 @@ if [[ ! -f ${jsonPath} ]]; then
         "aboutUpdateURLs": [
             {
             "_language": "en",
-            "aboutUpdateURL": "https://support.apple.com/en-us/109035"
+            "aboutUpdateURL": "https://support.apple.com/en-us/108382"
             }
         ],
         "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
@@ -468,13 +472,25 @@ if [[ ! -f ${jsonPath} ]]; then
         "aboutUpdateURLs": [
             {
             "_language": "en",
-            "aboutUpdateURL": "https://www.apple.com/macos/macos-sequoia/"
+            "aboutUpdateURL": "https://support.apple.com/en-us/108382"
             }
         ],
         "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
         "requiredInstallationDate": "${deadline}",
         "requiredMinimumOSVersion": "${requiredSequoiaMinimumOSVersion}",
         "targetedOSVersionsRule": "15"
+        },
+        {
+        "aboutUpdateURLs": [
+            {
+            "_language": "en",
+            "aboutUpdateURL": "https://support.apple.com/en-us/108382"
+            }
+        ],
+        "majorUpgradeAppPath": "/System/Library/CoreServices/Software Update.app",
+        "requiredInstallationDate": "${deadline}",
+        "requiredMinimumOSVersion": "${requiredTahomaMinimumOSVersion}",
+        "targetedOSVersionsRule": "26"
         }
     ],
     "userExperience": {
