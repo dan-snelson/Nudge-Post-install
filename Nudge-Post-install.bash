@@ -103,7 +103,7 @@
 #       - Added macOS Sequoia settings
 #
 #   Version 0.0.24, 24-Sep-2025, Dan K. Snelson (@dan-snelson)
-#       - Added macOS Tahoma settings
+#       - Added macOS Tahoe settings
 #
 ####################################################################################################
 
