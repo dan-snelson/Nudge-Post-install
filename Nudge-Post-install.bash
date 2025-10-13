@@ -119,7 +119,7 @@
 # Global Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="0.0.24b1"
+scriptVersion="0.0.24b2"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }' )
 plistDomain="${4:-"org.churchofjesuschrist"}"        # Reverse Domain Name Notation (i.e., "org.churchofjesuschrist")
